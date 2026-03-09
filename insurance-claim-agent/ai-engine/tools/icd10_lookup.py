@@ -1,30 +1,57 @@
-from __future__ import annotations
+import pandas as pd
 
-from dataclasses import dataclass
+# ── 1. Load the cleaned CSV ──────────────────────────────────────────────────
+df = pd.read_csv("data/processed/icd10_lookup_clean.csv")
+
+# ── 2. Keyword alias map ─────────────────────────────────────────────────────
+ALIASES = {
+    "lumbar disc herniation": ["intervertebral disc", "lumbar"],
+    "disc herniation": ["intervertebral disc", "displacement"],
+    "knee osteoarthritis": ["osteoarthritis", "knee"],
+    "knee replacement": ["osteoarthritis", "knee"],
+    "cholecystitis": ["cholecystitis"],
+    "gallstones": ["calculus", "gallbladder"],
+    "low back pain": ["low back pain"],
+}
+
+# ── 3. Lookup function ───────────────────────────────────────────────────────
+def lookup_icd10_code(diagnosis_text: str, top_n: int = 5) -> list:
+    query = diagnosis_text.strip().lower()
+
+    # Check alias map first
+    keywords = ALIASES.get(query, [query])
+
+    # All keywords must match (AND logic)
+    mask = pd.Series([True] * len(df))
+    for kw in keywords:
+        mask = mask & df["description"].str.contains(kw, case=False, na=False)
+
+    results = df[mask].head(top_n)
+
+    # Fallback: try OR logic if AND returns nothing
+    if results.empty:
+        mask = pd.Series([False] * len(df))
+        for kw in keywords:
+            mask = mask | df["description"].str.contains(kw, case=False, na=False)
+        results = df[mask].head(top_n)
+
+    if results.empty:
+        return [{"icd10_code": "NOT_FOUND", "description": f"No match for: {query}"}]
+
+    return results.to_dict(orient="records")
 
 
-@dataclass(frozen=True)
-class ICD10Result:
-    icd10: str
-    label: str
+# ── 4. Test ───────────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    tests = [
+        "lumbar disc herniation",
+        "knee osteoarthritis",
+        "cholecystitis",
+        "low back pain"
+    ]
 
-
-_MINI_CODESET = [
-    ICD10Result("M51.1", "Lumbar and other intervertebral disc disorders with radiculopathy"),
-    ICD10Result("M54.5", "Low back pain"),
-    ICD10Result("K81.0", "Acute cholecystitis"),
-    ICD10Result("K80.20", "Calculus of gallbladder without cholecystitis, without obstruction"),
-    ICD10Result("M17.11", "Unilateral primary osteoarthritis, right knee"),
-]
-
-
-def lookup_icd10_code(query: str) -> list[dict]:
-    q = (query or "").strip().lower()
-    if not q:
-        return []
-    out: list[dict] = []
-    for row in _MINI_CODESET:
-        if q in row.icd10.lower() or q in row.label.lower():
-            out.append({"icd10": row.icd10, "label": row.label})
-    return out[:10]
-
+    for test in tests:
+        print(f"\nQuery: '{test}'")
+        matches = lookup_icd10_code(test)
+        for m in matches:
+            print(f"  {m['icd10_code']} → {m['description']}")
