@@ -1,1 +1,176 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── Medical Design System – CSS Custom Properties ─── */
+:root {
+  /* Light Mode (default) */
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f8fafa;
+  --bg-card:       #ffffff;
+  --bg-sidebar:    #1a2a2a;
+  --bg-input:      #ffffff;
+
+  --text-primary:  #0f1f1f;
+  --text-secondary:#4a5f5f;
+  --text-muted:    #8a9fa0;
+  --text-inverse:  #ffffff;
+
+  --border-color:  #d4e0e0;
+  --border-focus:  #e53e3e;
+
+  /* Medical Palette */
+  --med-red:       #dc2626;       /* clinical-red */
+  --med-red-light: #fef2f2;
+  --med-red-mid:   #fee2e2;
+  --med-green:     #16a34a;       /* healing-green */
+  --med-green-light:#f0fdf4;
+  --med-green-mid: #dcfce7;
+  --med-amber:     #d97706;       /* caution-amber */
+  --med-amber-light:#fffbeb;
+
+  --accent:        #dc2626;
+  --accent-hover:  #b91c1c;
+  --accent-green:  #16a34a;
+  --accent-green-hover:#15803d;
+
+  --shadow-sm:     0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:     0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:     0 12px 32px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.06);
+
+  --radius-sm:     8px;
+  --radius-md:     12px;
+  --radius-lg:     18px;
+  --radius-xl:     24px;
+
+  --transition:    all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg-primary:    #0d1717;
+  --bg-secondary:  #111e1e;
+  --bg-card:       #162222;
+  --bg-sidebar:    #0a1212;
+  --bg-input:      #1e2e2e;
+
+  --text-primary:  #eef4f4;
+  --text-secondary:#98b4b4;
+  --text-muted:    #5c7878;
+  --text-inverse:  #0f1f1f;
+
+  --border-color:  #2a3f3f;
+  --border-focus:  #ef4444;
+
+  --med-red-light: rgba(220,38,38,.12);
+  --med-red-mid:   rgba(220,38,38,.20);
+  --med-green-light:rgba(22,163,74,.12);
+  --med-green-mid: rgba(22,163,74,.20);
+  --med-amber-light:rgba(217,119,6,.12);
+
+  --shadow-sm:     0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:     0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:     0 12px 32px rgba(0,0,0,.5);
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background 0.35s ease, color 0.25s ease;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+/* ─── Page Transition ─── */
+.page-enter {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* ─── Keyframes ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%       { transform: scale(1.4); opacity: 0; }
+}
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  14%     { transform: scale(1.12); }
+  28%     { transform: scale(1); }
+  42%     { transform: scale(1.08); }
+  70%     { transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes gradientX {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Utility Animation Classes ─── */
+.animate-fadeUp          { animation: fadeUp 0.45s ease both; }
+.animate-fadeIn          { animation: fadeIn 0.3s ease both; }
+.animate-slideInLeft     { animation: slideInLeft 0.4s ease both; }
+.animate-slideInRight    { animation: slideInRight 0.4s ease both; }
+.animate-heartbeat       { animation: heartbeat 2s ease-in-out infinite; }
+.animate-pulse-ring      { animation: pulse-ring 1.5s ease-out infinite; }
+.animate-gradientX       { animation: gradientX 4s ease infinite; }
+.animate-spin            { animation: spin 1s linear infinite; }
+
+.delay-100 { animation-delay: 0.10s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.30s; }
+.delay-400 { animation-delay: 0.40s; }
+.delay-500 { animation-delay: 0.50s; }
+
+/* ─── Medical Glow Effects ─── */
+.glow-red   { box-shadow: 0 0 20px rgba(220,38,38,.25); }
+.glow-green { box-shadow: 0 0 20px rgba(22,163,74,.25); }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Selection ─── */
+::selection { background: rgba(220,38,38,.2); }
