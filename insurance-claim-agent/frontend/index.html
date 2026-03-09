@@ -928,31 +928,222 @@
     <!-- NEW CLAIM -->
     <div class="page" id="page-new-claim">
       <div class="topbar">
-        <div><div class="breadcrumb">Dashboard <span>›</span> New Claim</div><div class="page-title">New Pre-Authorization Request</div><div class="page-sub">Submit a claim — the agent will analyze and assemble the package</div></div>
-        <button class="demo-btn" onclick="loadDemoPatient()">🎯 Load Demo Patient</button>
+        <div>
+          <div class="breadcrumb">Dashboard <span>›</span> New Claim</div>
+          <div class="page-title">New Pre-Authorization Request</div>
+          <div class="page-sub">
+            Structured intake for surgical claims — fill manually or load sample
+            data, then let the agent analyze risk and missing documents.
+          </div>
+        </div>
+        <button class="demo-btn" onclick="loadDemoPatient()">🎯 Load Sample Case</button>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title">Patient & Procedure Details</div></div>
+        <div class="card-header">
+          <div class="card-title">1–3 · Patient, Diagnosis &amp; Procedure</div>
+        </div>
         <div class="card-body" style="padding:22px">
           <div class="form-grid">
+            <!-- 1️⃣ Patient Details -->
             <div class="form-group"><label>Patient ID</label><input type="text" id="f-pid" placeholder="e.g. PAT-1042"/></div>
             <div class="form-group"><label>Patient Name</label><input type="text" id="f-pname" placeholder="Full name"/></div>
             <div class="form-group"><label>Date of Birth</label><input type="date" id="f-dob"/></div>
+            <div class="form-group"><label>Gender</label>
+              <select id="f-gender">
+                <option value="">Select gender...</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
             <div class="form-group">
               <label>Insurance Provider</label>
               <select id="f-insurer"><option value="">Select insurer...</option><option>Star Health Insurance</option><option>HDFC ERGO Health</option><option>Bajaj Allianz Health</option><option>Niva Bupa Health</option><option>Care Health Insurance</option></select>
             </div>
             <div class="form-group"><label>Policy Number</label><input type="text" id="f-policy" placeholder="e.g. STAR-0029481"/></div>
             <div class="form-group"><label>Treating Doctor</label><input type="text" id="f-doc" placeholder="Dr. Name"/></div>
+
+            <!-- 2️⃣ Diagnosis Details -->
+            <div class="form-group full"><label>Diagnosis Description</label><input type="text" id="f-diagnosis-desc" placeholder="e.g. Lumbar Disc Herniation"/></div>
+            <div class="form-group"><label>ICD-10 Code</label><input type="text" id="f-icd" placeholder="e.g. M51.1"/></div>
+            <div class="form-group"><label>Diagnosis Date</label><input type="date" id="f-diagnosis-date"/></div>
+            <div class="form-group full"><label>Clinical Notes (optional)</label><textarea id="f-diagnosis-notes" rows="3" placeholder="Summarize key clinical findings supporting the diagnosis…"></textarea></div>
+
+            <!-- 3️⃣ Procedure Details -->
             <div class="form-group">
               <label>Planned Procedure</label>
               <select id="f-proc"><option value="">Select procedure...</option><option>Knee Replacement (CPT 27447)</option><option>Appendectomy (CPT 44950)</option><option>Cardiac Stenting (CPT 92928)</option><option>Cholecystectomy (CPT 47562)</option><option>Spinal Fusion (CPT 22612)</option><option>Hip Replacement (CPT 27130)</option></select>
             </div>
             <div class="form-group"><label>Surgery Date</label><input type="date" id="f-sdate"/></div>
+            <div class="form-group full"><label>Hospital Name</label><input type="text" id="f-hospital" placeholder="e.g. Apollo Hospital"/></div>
             <div class="form-group full"><label>Surgeon's Recommendation Note</label><textarea id="f-note" rows="5" placeholder="Paste the surgeon's recommendation note here..."></textarea></div>
-            <div class="form-group"><label>Primary Diagnosis (ICD-10)</label><input type="text" id="f-icd" placeholder="Agent will auto-detect from note" style="color:var(--muted)"/></div>
             <div class="form-group"><label>Estimated Cost (₹)</label><input type="number" id="f-cost" placeholder="e.g. 450000"/></div>
           </div>
+        </div>
+      </div>
+
+      <!-- 4–9: Supporting docs, history, labs, certification, claim & risk -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">4–9 · Documents, History, Certification &amp; Risk</div>
+        </div>
+        <div class="card-body" style="padding:22px">
+          <!-- 4️⃣ Supporting Documents Upload -->
+          <div class="section-title">Supporting Documents Upload</div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Imaging (MRI / X-Ray / Ultrasound)</label>
+              <input type="file" id="f-doc-imaging" multiple/>
+            </div>
+            <div class="form-group full">
+              <label>Doctor Recommendation Letter</label>
+              <input type="file" id="f-doc-reco" multiple/>
+            </div>
+            <div class="form-group full">
+              <label>Treatment History Records</label>
+              <input type="file" id="f-doc-history" multiple/>
+            </div>
+            <div class="form-group full">
+              <label>Lab Reports / Medical Certificates</label>
+              <input type="file" id="f-doc-labs" multiple/>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 5️⃣ Treatment History -->
+          <div class="section-title">Treatment History</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Previous Treatments</label>
+              <textarea id="f-prev-treatments" rows="3" placeholder="e.g. Physiotherapy, analgesics, injections…"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Treatment Duration</label>
+              <input type="text" id="f-treat-duration" placeholder="e.g. 6 weeks"/>
+            </div>
+            <div class="form-group full">
+              <label>Outcome</label>
+              <textarea id="f-treat-outcome" rows="3" placeholder="e.g. Partial relief, no sustained improvement…"></textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 6️⃣ Lab Reports -->
+          <div class="section-title">Lab Reports</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Primary Report Type</label>
+              <select id="f-lab-type">
+                <option value="">Select type…</option>
+                <option>MRI</option>
+                <option>X-Ray</option>
+                <option>CBC</option>
+                <option>LFT</option>
+                <option>Pain scale / functional score</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Report Date</label>
+              <input type="date" id="f-lab-date"/>
+            </div>
+            <div class="form-group full">
+              <label>Key Findings</label>
+              <textarea id="f-lab-findings" rows="3" placeholder="e.g. MRI Lumbar Spine – disc herniation at L4-L5, nerve root compression…"></textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 7️⃣ Doctor Certification -->
+          <div class="section-title">Doctor Certification</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Surgeon Name</label>
+              <input type="text" id="f-cert-surgeon" placeholder="e.g. Dr. Sharma"/>
+            </div>
+            <div class="form-group">
+              <label>Medical License ID</label>
+              <input type="text" id="f-license" placeholder="e.g. Reg. No. TN-XXXX"/>
+            </div>
+            <div class="form-group">
+              <label>Signed Recommendation Letter</label>
+              <input type="file" id="f-cert-letter"/>
+            </div>
+            <div class="form-group">
+              <label>Medical Necessity Certificate</label>
+              <input type="file" id="f-cert-necessity"/>
+            </div>
+            <div class="form-group full">
+              <label>Certification Notes (optional)</label>
+              <textarea id="f-cert-notes" rows="3" placeholder="e.g. Surgeon justification, comorbidities, urgent indications…"></textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 8️⃣ Claim Details -->
+          <div class="section-title">Claim Details</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Claim ID</label>
+              <input type="text" id="f-claim-id" placeholder="e.g. CLM_011"/>
+            </div>
+            <div class="form-group">
+              <label>Claim Submission Date</label>
+              <input type="date" id="f-claim-date"/>
+            </div>
+            <div class="form-group">
+              <label>Requested Amount (₹)</label>
+              <input type="number" id="f-requested-amount" placeholder="e.g. 175000"/>
+            </div>
+            <div class="form-group">
+              <label>Procedure Cost Estimate (₹)</label>
+              <input type="number" id="f-proc-cost-est" placeholder="e.g. 175000"/>
+            </div>
+            <div class="form-group full">
+              <label>Internal Claim Notes (optional)</label>
+              <textarea id="f-claim-notes" rows="3" placeholder="e.g. Co-pay, sub-limits, special approvals, expected TAT…"></textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 9️⃣ Optional Risk Factors -->
+          <div class="section-title">Optional Risk Factors (for AI scoring)</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>BMI</label>
+              <input type="number" step="0.1" id="f-bmi" placeholder="e.g. 32"/>
+            </div>
+            <div class="form-group">
+              <label>Age (years)</label>
+              <input type="number" id="f-age" placeholder="e.g. 47"/>
+            </div>
+            <div class="form-group">
+              <label>Conservative Treatment Duration</label>
+              <input type="text" id="f-conservative-duration" placeholder="e.g. 6 weeks"/>
+            </div>
+            <div class="form-group">
+              <label>MRI / Key Imaging Date</label>
+              <input type="date" id="f-mri-date"/>
+            </div>
+            <div class="form-group">
+              <label>Ultrasound / X-Ray Date</label>
+              <input type="date" id="f-ultrasound-date"/>
+            </div>
+            <div class="form-group">
+              <label>Latest Lab Report Date</label>
+              <input type="date" id="f-lab-latest-date"/>
+            </div>
+            <div class="form-group full">
+              <label>Risk Notes</label>
+              <textarea id="f-risk-notes" rows="3" placeholder="e.g. BMI 32 – above insurer threshold of 30, MRI & physiotherapy within last 6 months…"></textarea>
+            </div>
+          </div>
+
           <div class="divider"></div>
           <div style="display:flex;gap:12px;justify-content:flex-end">
             <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
@@ -1583,22 +1774,95 @@ Kathir Memorial Hospital</div>
   //  DEMO DATA
   // ============================================================
   function loadDemoPatient() {
-    document.getElementById('f-pid').value     = 'PAT-1042';
-    document.getElementById('f-pname').value   = 'Priya Subramaniam';
-    document.getElementById('f-dob').value     = '1990-06-15';
-    document.getElementById('f-insurer').value = 'HDFC ERGO Health';
-    document.getElementById('f-policy').value  = 'HDFC-20938472';
-    document.getElementById('f-doc').value     = 'Dr. Anand Krishnan';
-    document.getElementById('f-proc').value    = 'Appendectomy (CPT 44950)';
-    document.getElementById('f-icd').value     = 'K37 — Unspecified appendicitis';
-    document.getElementById('f-cost').value    = '180000';
-    document.getElementById('f-note').value    = 'Patient Priya Subramaniam, 35F, presents with acute right lower quadrant pain radiating to the periumbilical region for the past 48 hours. CBC shows leukocytosis (WBC 13.2 × 10³). Ultrasound confirms non-compressible appendix of 9mm diameter. Conservative antibiotic management with Amoxicillin 500mg for 5 days has failed to resolve symptoms. Immediate laparoscopic appendectomy (CPT 44950) is recommended to prevent perforation and peritonitis. Diagnosis: Acute appendicitis (ICD-10: K37).';
-    showNotif('✅ Demo patient data loaded!', 'success');
+    // 1️⃣ Patient Details (Rajesh Kumar example from patient_ehr)
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+
+    setVal('f-pid', 'PAT_001');
+    setVal('f-pname', 'Rajesh Kumar');
+    setVal('f-dob', '1978-04-12');
+    setVal('f-gender', 'Male');
+    setVal('f-insurer', 'Star Health Insurance');
+    setVal('f-policy', 'POL-2024-88321');
+    setVal('f-doc', 'Dr. Sharma');
+
+    // 2️⃣ Diagnosis Information (Lumbar Disc Herniation)
+    setVal('f-diagnosis-desc', 'Lumbar Disc Herniation');
+    setVal('f-icd', 'M51.1');
+    setVal('f-diagnosis-date', '2023-06-10');
+    setVal('f-diagnosis-notes',
+      'Chronic low back pain with radiculopathy. MRI confirms lumbar disc herniation with nerve root compression. Failed conservative management.'
+    );
+
+    // 3️⃣ Procedure Details (Lumbar Discectomy)
+    setVal('f-proc', 'Spinal Fusion (CPT 22612)'); // closest existing option to lumbar spine surgery
+    setVal('f-sdate', '2024-02-15');
+    setVal('f-hospital', 'Apollo Hospital');
+    setVal('f-cost', '450000');
+    setVal('f-note',
+      'Patient Rajesh Kumar, 46M, presents with severe lumbar radiculopathy secondary to lumbar disc herniation. MRI shows disc protrusion with nerve root compression, correlating with clinical symptoms. Conservative management including physiotherapy and analgesics over 6 weeks has provided only partial relief. Lumbar discectomy is recommended to prevent further neurological compromise and restore function.'
+    );
+
+    // 5️⃣ Treatment History
+    setVal('f-prev-treatments', 'Physiotherapy, NSAIDs, rest and activity modification.');
+    setVal('f-treat-duration', '6 weeks');
+    setVal('f-treat-outcome', 'Partial relief only; persistent radicular pain and functional limitation.');
+
+    // 6️⃣ Lab Reports (Imaging example)
+    setVal('f-lab-type', 'MRI');
+    setVal('f-lab-date', '2023-11-20');
+    setVal('f-lab-findings', 'MRI Lumbar Spine: disc herniation at L4-L5 with nerve root compression; reduced disc height and Modic changes.');
+
+    // 7️⃣ Doctor Certification
+    setVal('f-cert-surgeon', 'Dr. Sharma');
+    setVal('f-license', 'TN-20458');
+    setVal('f-cert-notes',
+      'Certificate of Medical Necessity: Lumbar discectomy indicated after failure of conservative management and MRI-confirmed compression.'
+    );
+
+    // 8️⃣ Claim Details
+    setVal('f-claim-id', 'CLM_011');
+    setVal('f-claim-date', '2026-03-09');
+    setVal('f-requested-amount', '450000');
+    setVal('f-proc-cost-est', '450000');
+    setVal('f-claim-notes',
+      'High-value spine procedure. Ensure MRI and conservative treatment documentation are attached for pre-auth.'
+    );
+
+    // 9️⃣ Optional Risk Factors
+    setVal('f-bmi', '32');
+    setVal('f-age', '46');
+    setVal('f-conservative-duration', '6 weeks');
+    setVal('f-mri-date', '2023-11-20');
+    setVal('f-ultrasound-date', '');
+    setVal('f-lab-latest-date', '2023-11-20');
+    setVal('f-risk-notes',
+      'BMI 32 may exceed some insurer thresholds for certain procedures; imaging and conservative treatment are within the last year.'
+    );
+
+    showNotif('✅ Sample lumbar disc herniation case loaded!', 'success');
   }
 
   function resetForm() {
-    ['f-pid','f-pname','f-dob','f-insurer','f-policy','f-doc','f-proc','f-sdate','f-note','f-icd','f-cost']
-      .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    const ids = [
+      'f-pid','f-pname','f-dob','f-gender','f-insurer','f-policy','f-doc',
+      'f-diagnosis-desc','f-icd','f-diagnosis-date','f-diagnosis-notes',
+      'f-proc','f-sdate','f-hospital','f-note','f-cost',
+      'f-doc-imaging','f-doc-reco','f-doc-history','f-doc-labs',
+      'f-prev-treatments','f-treat-duration','f-treat-outcome',
+      'f-lab-type','f-lab-date','f-lab-findings',
+      'f-cert-surgeon','f-license','f-cert-letter','f-cert-necessity','f-cert-notes',
+      'f-claim-id','f-claim-date','f-requested-amount','f-proc-cost-est','f-claim-notes',
+      'f-bmi','f-age','f-conservative-duration','f-mri-date','f-ultrasound-date','f-lab-latest-date','f-risk-notes'
+    ];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'file') {
+        el.value = '';
+      } else {
+        el.value = '';
+      }
+    });
   }
 
   // ============================================================
