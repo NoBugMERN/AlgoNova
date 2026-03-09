@@ -1,119 +1,1136 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Insurance Claim Agent</title>
-    <link rel="stylesheet" href="./styles/main.css" />
-  </head>
-  <body>
-    <div class="container">
-      <header class="header">
-        <h1>Insurance Claim Agent</h1>
-        <p class="subtle">Mock pre-auth analysis using frozen JSON + simple rules.</p>
-      </header>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ClaimIQ — Insurance Claim Optimization Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1f2d45;
+    --accent: #00d4aa;
+    --accent2: #3b82f6;
+    --danger: #f43f5e;
+    --warn: #f59e0b;
+    --success: #10b981;
+    --text: #e8edf5;
+    --muted: #64748b;
+    --sidebar-w: 240px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; display:flex; min-height:100vh; overflow-x:hidden; }
 
-      <section class="card">
-        <h2>Run analysis</h2>
-        <form id="analyzeForm" class="form">
-          <label>
-            Patient ID
-            <input name="patientId" value="PAT_001" />
-          </label>
-          <label>
-            Insurer ID
-            <input name="insurerId" value="INS_A" />
-          </label>
-          <label>
-            Procedure ID (CPT)
-            <input name="procedureId" value="CPT_63030" />
-          </label>
-          <label>
-            Surgeon note text
-            <textarea name="surgeonNoteText" rows="6">Patient presents with severe lower back pain. MRI confirms L4-L5 disc herniation. Conservative treatment failed. Recommend Lumbar Discectomy.</textarea>
-          </label>
+  /* SIDEBAR */
+  #sidebar {
+    width:var(--sidebar-w); background:var(--surface); border-right:1px solid var(--border);
+    display:flex; flex-direction:column; position:fixed; height:100vh; z-index:100;
+    padding:0 0 24px;
+  }
+  .logo {
+    padding:28px 24px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo-icon {
+    width:36px; height:36px; background:var(--accent); border-radius:10px;
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+  }
+  .logo-text { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--text); letter-spacing:-0.5px; }
+  .logo-sub { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
 
-          <div class="row">
-            <button type="submit">Analyze</button>
-            <button type="button" id="loadMock">Load mock note</button>
-          </div>
-        </form>
-      </section>
+  .nav-section { padding:20px 12px 8px; }
+  .nav-label { font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; padding:0 12px; margin-bottom:8px; }
+  .nav-item {
+    display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px;
+    cursor:pointer; font-size:14px; color:var(--muted); transition:all .2s; margin-bottom:2px;
+  }
+  .nav-item:hover { background:var(--surface2); color:var(--text); }
+  .nav-item.active { background:rgba(0,212,170,.12); color:var(--accent); }
+  .nav-item .icon { font-size:16px; width:20px; text-align:center; }
+  .nav-badge {
+    margin-left:auto; background:var(--danger); color:#fff;
+    font-size:10px; padding:2px 7px; border-radius:20px; font-weight:600;
+  }
 
-      <section class="grid">
-        <div class="card">
-          <h2>Result</h2>
-          <pre id="result" class="pre">(run an analysis)</pre>
-        </div>
-        <div class="card">
-          <h2>Quick checks</h2>
-          <div class="row">
-            <button type="button" id="pingBackend">Ping backend</button>
-            <button type="button" id="pingAi">Ping ai-engine</button>
-          </div>
-          <pre id="checks" class="pre"></pre>
-        </div>
-      </section>
+  .sidebar-footer { margin-top:auto; padding:0 16px; }
+  .agent-status {
+    background:rgba(0,212,170,.08); border:1px solid rgba(0,212,170,.2);
+    border-radius:10px; padding:12px 14px; display:flex; align-items:center; gap:10px;
+  }
+  .pulse-dot {
+    width:8px; height:8px; background:var(--accent); border-radius:50%;
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100%{ box-shadow:0 0 0 0 rgba(0,212,170,.4); }
+    50%{ box-shadow:0 0 0 6px rgba(0,212,170,0); }
+  }
+  .agent-label { font-size:12px; color:var(--accent); font-weight:500; }
+  .agent-sub { font-size:10px; color:var(--muted); }
+
+  /* MAIN */
+  #main { margin-left:var(--sidebar-w); flex:1; padding:32px; min-height:100vh; }
+
+  /* PAGE SYSTEM */
+  .page { display:none; animation:fadeIn .3s ease; }
+  .page.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* PAGE HEADERS */
+  .page-header { margin-bottom:28px; }
+  .page-title { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; letter-spacing:-0.5px; }
+  .page-sub { color:var(--muted); font-size:14px; margin-top:4px; }
+  .breadcrumb { font-size:12px; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .breadcrumb span { color:var(--accent); }
+
+  /* STAT CARDS */
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+  .stat-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:20px; position:relative; overflow:hidden; transition:transform .2s;
+  }
+  .stat-card:hover { transform:translateY(-2px); }
+  .stat-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  }
+  .stat-card.blue::before { background:var(--accent2); }
+  .stat-card.green::before { background:var(--success); }
+  .stat-card.red::before { background:var(--danger); }
+  .stat-card.yellow::before { background:var(--warn); }
+  .stat-num { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; }
+  .stat-label { font-size:12px; color:var(--muted); margin-top:4px; letter-spacing:.3px; }
+  .stat-delta { font-size:11px; margin-top:8px; display:flex; align-items:center; gap:4px; }
+  .stat-delta.up { color:var(--success); }
+  .stat-delta.down { color:var(--danger); }
+
+  /* TABLES */
+  .card {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    overflow:hidden; margin-bottom:20px;
+  }
+  .card-header {
+    padding:18px 22px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .card-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; }
+  .card-body { padding:0; }
+  table { width:100%; border-collapse:collapse; }
+  th {
+    text-align:left; font-size:11px; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--muted); padding:12px 22px; background:rgba(255,255,255,.02);
+    border-bottom:1px solid var(--border);
+  }
+  td { padding:14px 22px; font-size:13px; border-bottom:1px solid rgba(31,45,69,.6); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+
+  /* BADGES */
+  .badge {
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px;
+    letter-spacing:.3px;
+  }
+  .badge.low { background:rgba(16,185,129,.15); color:var(--success); border:1px solid rgba(16,185,129,.3); }
+  .badge.medium { background:rgba(245,158,11,.15); color:var(--warn); border:1px solid rgba(245,158,11,.3); }
+  .badge.high { background:rgba(244,63,94,.15); color:var(--danger); border:1px solid rgba(244,63,94,.3); }
+  .badge.approved { background:rgba(16,185,129,.15); color:var(--success); border:1px solid rgba(16,185,129,.3); }
+  .badge.pending { background:rgba(59,130,246,.15); color:var(--accent2); border:1px solid rgba(59,130,246,.3); }
+  .badge.rejected { background:rgba(244,63,94,.15); color:var(--danger); border:1px solid rgba(244,63,94,.3); }
+
+  /* BUTTONS */
+  .btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 18px; border-radius:8px; font-size:13px; font-weight:500;
+    cursor:pointer; border:none; transition:all .2s; font-family:'DM Sans',sans-serif;
+  }
+  .btn-primary { background:var(--accent); color:#0b0f1a; }
+  .btn-primary:hover { background:#00b894; transform:translateY(-1px); }
+  .btn-secondary { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .btn-secondary:hover { background:var(--border); }
+  .btn-danger { background:rgba(244,63,94,.15); color:var(--danger); border:1px solid rgba(244,63,94,.3); }
+  .btn-sm { padding:6px 12px; font-size:12px; }
+
+  /* FORM */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  .form-group.full { grid-column:1/-1; }
+  label { font-size:12px; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; }
+  input, select, textarea {
+    background:var(--surface2); border:1px solid var(--border); color:var(--text);
+    padding:11px 14px; border-radius:8px; font-size:14px; font-family:'DM Sans',sans-serif;
+    transition:border-color .2s; outline:none;
+  }
+  input:focus, select:focus, textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,212,170,.1); }
+  textarea { resize:vertical; min-height:100px; }
+  select option { background:var(--surface); }
+
+  /* ANALYSIS PAGE */
+  .analysis-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .analysis-grid.three { grid-template-columns:1fr 1fr 1fr; }
+  .info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); }
+  .info-row:last-child { border-bottom:none; }
+  .info-key { font-size:12px; color:var(--muted); }
+  .info-val { font-size:13px; font-weight:500; }
+  .code-chip {
+    background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.25);
+    color:var(--accent2); font-size:12px; padding:3px 10px; border-radius:6px; font-weight:600;
+    font-family:monospace;
+  }
+
+  /* CHECKLIST */
+  .checklist { display:flex; flex-direction:column; gap:10px; }
+  .check-item {
+    display:flex; align-items:flex-start; gap:12px;
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; padding:14px;
+  }
+  .check-item.missing { border-color:rgba(244,63,94,.3); background:rgba(244,63,94,.05); }
+  .check-item.found { border-color:rgba(16,185,129,.25); background:rgba(16,185,129,.04); }
+  .check-icon { font-size:18px; margin-top:1px; flex-shrink:0; }
+  .check-name { font-size:13px; font-weight:500; }
+  .check-detail { font-size:12px; color:var(--muted); margin-top:3px; }
+  .check-alert { font-size:11px; color:var(--danger); margin-top:5px; background:rgba(244,63,94,.1); padding:5px 9px; border-radius:5px; }
+
+  /* RISK SCORE */
+  .risk-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:24px; text-align:center;
+  }
+  .risk-ring {
+    width:120px; height:120px; margin:0 auto 16px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'Syne',sans-serif; font-size:28px; font-weight:800; position:relative;
+  }
+  .risk-ring.low { background:conic-gradient(var(--success) 72deg, var(--surface2) 0); color:var(--success); }
+  .risk-ring.medium { background:conic-gradient(var(--warn) 180deg, var(--surface2) 0); color:var(--warn); }
+  .risk-ring.high { background:conic-gradient(var(--danger) 270deg, var(--surface2) 0); color:var(--danger); }
+  .risk-ring::after {
+    content:''; position:absolute; width:90px; height:90px; background:var(--surface);
+    border-radius:50%;
+  }
+  .risk-num { position:relative; z-index:1; }
+  .risk-label { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; }
+  .risk-reason { font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5; }
+
+  /* EVIDENCE TABLE */
+  .evidence-item {
+    background:var(--surface2); border-radius:8px; padding:12px 14px; margin-bottom:8px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .ev-name { font-size:13px; }
+  .ev-date { font-size:11px; color:var(--muted); margin-top:2px; }
+  .ev-relevance { font-size:11px; color:var(--accent); background:rgba(0,212,170,.1); padding:3px 8px; border-radius:5px; }
+
+  /* PREAUTH FORM */
+  .form-field-display {
+    background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px;
+    margin-bottom:10px;
+  }
+  .ffd-label { font-size:10px; color:var(--muted); letter-spacing:1.2px; text-transform:uppercase; margin-bottom:5px; }
+  .ffd-value { font-size:13px; line-height:1.5; }
+  .ffd-cited { font-size:11px; color:var(--accent2); margin-top:4px; }
+
+  /* APPEAL PAGE */
+  .timeline { position:relative; padding-left:28px; }
+  .timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:var(--border); }
+  .tl-item { position:relative; margin-bottom:24px; }
+  .tl-dot {
+    position:absolute; left:-22px; top:3px;
+    width:12px; height:12px; border-radius:50%; border:2px solid var(--bg);
+  }
+  .tl-dot.red { background:var(--danger); }
+  .tl-dot.yellow { background:var(--warn); }
+  .tl-dot.green { background:var(--success); }
+  .tl-dot.blue { background:var(--accent2); }
+  .tl-title { font-size:13px; font-weight:600; margin-bottom:4px; }
+  .tl-body { font-size:12px; color:var(--muted); line-height:1.5; }
+
+  .appeal-letter {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; padding:22px; font-size:13px; line-height:1.8;
+    color:var(--text); white-space:pre-line;
+  }
+
+  /* LOADER */
+  .loader-overlay {
+    display:none; position:fixed; inset:0; background:rgba(11,15,26,.85);
+    z-index:999; flex-direction:column; align-items:center; justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+  .loader-overlay.show { display:flex; }
+  .loader-spinner {
+    width:56px; height:56px; border-radius:50%;
+    border:3px solid var(--border); border-top-color:var(--accent);
+    animation:spin 1s linear infinite; margin-bottom:20px;
+  }
+  @keyframes spin { to{ transform:rotate(360deg); } }
+  .loader-text { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text); }
+  .loader-step { font-size:13px; color:var(--muted); margin-top:8px; }
+  .loader-steps-list { display:flex; flex-direction:column; gap:8px; margin-top:20px; max-width:320px; }
+  .loader-step-item {
+    display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted);
+    opacity:0; transform:translateX(-10px); transition:all .3s;
+  }
+  .loader-step-item.done { opacity:1; transform:translateX(0); color:var(--accent); }
+  .loader-step-item.active { opacity:1; transform:translateX(0); color:var(--text); }
+
+  /* NOTIFICATION */
+  .notif {
+    position:fixed; top:20px; right:20px; background:var(--surface);
+    border:1px solid var(--border); border-radius:10px; padding:14px 18px;
+    font-size:13px; z-index:1000; display:none; max-width:300px;
+    animation:slideIn .3s ease;
+  }
+  @keyframes slideIn { from{transform:translateX(30px);opacity:0} to{transform:translateX(0);opacity:1} }
+  .notif.show { display:flex; align-items:center; gap:10px; }
+  .notif.success { border-color:rgba(16,185,129,.4); }
+  .notif.error { border-color:rgba(244,63,94,.4); }
+
+  /* DIVIDER */
+  .divider { height:1px; background:var(--border); margin:20px 0; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family:'Syne',sans-serif; font-size:13px; font-weight:700;
+    text-transform:uppercase; letter-spacing:1.5px; color:var(--muted);
+    margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* TOP BAR */
+  .topbar {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid var(--border);
+  }
+  .topbar-right { display:flex; align-items:center; gap:12px; }
+  .topbar-time { font-size:12px; color:var(--muted); }
+
+  /* DEMO PATIENT BUTTON */
+  .demo-btn {
+    background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.3);
+    color:var(--accent2); border-radius:8px; padding:8px 14px; font-size:12px;
+    cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .2s;
+    display:flex; align-items:center; gap:6px;
+  }
+  .demo-btn:hover { background:rgba(59,130,246,.2); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🧠</div>
+    <div>
+      <div class="logo-text">ClaimIQ</div>
+      <div class="logo-sub">Optimization Agent</div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <span class="icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="navigate('new-claim')">
+      <span class="icon">➕</span> New Claim
+    </div>
+    <div class="nav-item" onclick="navigate('analysis')">
+      <span class="icon">🔍</span> Claim Analysis
+      <span class="nav-badge">2</span>
+    </div>
+    <div class="nav-item" onclick="navigate('preauth')">
+      <span class="icon">📋</span> Pre-Auth Package
+    </div>
+    <div class="nav-item" onclick="navigate('appeal')">
+      <span class="icon">⚡</span> Appeal Center
+      <span class="nav-badge">1</span>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">History</div>
+    <div class="nav-item" onclick="navigate('history')">
+      <span class="icon">📁</span> All Claims
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="agent-status">
+      <div class="pulse-dot"></div>
+      <div>
+        <div class="agent-label">Agent Active</div>
+        <div class="agent-sub">Monitoring 3 claims</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div class="page active" id="page-dashboard">
+    <div class="topbar">
+      <div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Overview of all insurance claim activities</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-time" id="clock"></div>
+        <button class="btn btn-primary" onclick="navigate('new-claim')">＋ New Claim</button>
+      </div>
     </div>
 
-    <script>
-      const $ = (id) => document.getElementById(id);
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-num">48</div>
+        <div class="stat-label">Total Claims This Month</div>
+        <div class="stat-delta up">↑ 12% from last month</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-num">31</div>
+        <div class="stat-label">Approved Claims</div>
+        <div class="stat-delta up">↑ 8% approval rate</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-num">7</div>
+        <div class="stat-label">Rejected Claims</div>
+        <div class="stat-delta down">↓ 3% vs last month</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="stat-num">10</div>
+        <div class="stat-label">Pending Review</div>
+        <div class="stat-delta">Avg. 2.1 days wait</div>
+      </div>
+    </div>
 
-      async function safeJson(resp) {
-        const text = await resp.text();
-        try {
-          return JSON.parse(text);
-        } catch {
-          return { raw: text };
-        }
-      }
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Recent Claims</div>
+        <button class="btn btn-secondary btn-sm" onclick="navigate('history')">View All</button>
+      </div>
+      <div class="card-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim ID</th><th>Patient</th><th>Procedure</th><th>Insurer</th>
+              <th>Submitted</th><th>Risk</th><th>Status</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-chip">CLM-2401</span></td>
+              <td>Ramesh K.</td>
+              <td>Knee Replacement (CPT 27447)</td>
+              <td>Star Health</td>
+              <td>Mar 08, 2026</td>
+              <td><span class="badge low">● Low</span></td>
+              <td><span class="badge approved">Approved</span></td>
+              <td><button class="btn btn-secondary btn-sm" onclick="navigate('analysis')">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">CLM-2402</span></td>
+              <td>Priya S.</td>
+              <td>Appendectomy (CPT 44950)</td>
+              <td>HDFC ERGO</td>
+              <td>Mar 07, 2026</td>
+              <td><span class="badge high">● High</span></td>
+              <td><span class="badge rejected">Rejected</span></td>
+              <td><button class="btn btn-danger btn-sm" onclick="navigate('appeal')">Appeal</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">CLM-2403</span></td>
+              <td>Arun M.</td>
+              <td>Cardiac Stenting (CPT 92928)</td>
+              <td>Bajaj Allianz</td>
+              <td>Mar 06, 2026</td>
+              <td><span class="badge medium">● Medium</span></td>
+              <td><span class="badge pending">Pending</span></td>
+              <td><button class="btn btn-secondary btn-sm" onclick="navigate('preauth')">Package</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">CLM-2404</span></td>
+              <td>Deepa R.</td>
+              <td>Cholecystectomy (CPT 47562)</td>
+              <td>Star Health</td>
+              <td>Mar 05, 2026</td>
+              <td><span class="badge low">● Low</span></td>
+              <td><span class="badge approved">Approved</span></td>
+              <td><button class="btn btn-secondary btn-sm" onclick="navigate('analysis')">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="code-chip">CLM-2405</span></td>
+              <td>Vikram T.</td>
+              <td>Spinal Fusion (CPT 22612)</td>
+              <td>HDFC ERGO</td>
+              <td>Mar 04, 2026</td>
+              <td><span class="badge medium">● Medium</span></td>
+              <td><span class="badge pending">Pending</span></td>
+              <td><button class="btn btn-secondary btn-sm" onclick="navigate('analysis')">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-      $("analyzeForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const fd = new FormData(e.target);
-        const payload = Object.fromEntries(fd.entries());
-        $("result").textContent = "Loading...";
-        try {
-          const resp = await fetch("http://localhost:3001/api/analyze", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-          const data = await safeJson(resp);
-          $("result").textContent = JSON.stringify(data, null, 2);
-        } catch (err) {
-          $("result").textContent = String(err);
-        }
-      });
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚠️ Active Alerts — Missing Documents</div>
+        <span class="badge high">2 Urgent</span>
+      </div>
+      <div class="card-body" style="padding:16px 22px;">
+        <div class="check-item missing" style="margin-bottom:10px">
+          <div class="check-icon">❌</div>
+          <div>
+            <div class="check-name">CLM-2402 · Priya S. — Appendectomy</div>
+            <div class="check-detail">HDFC ERGO requires: Surgeon's Certificate of Medical Necessity</div>
+            <div class="check-alert">🔔 Action Required: Request signed certificate from Dr. Anand (Surgery Dept.)</div>
+          </div>
+        </div>
+        <div class="check-item missing">
+          <div class="check-icon">❌</div>
+          <div>
+            <div class="check-name">CLM-2403 · Arun M. — Cardiac Stenting</div>
+            <div class="check-detail">Bajaj Allianz requires: Echocardiogram report (within 90 days)</div>
+            <div class="check-alert">🔔 Action Required: Upload Echo report from Mar 2026 — found in EHR but not attached</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      $("pingBackend").addEventListener("click", async () => {
-        $("checks").textContent = "Pinging backend...";
-        try {
-          const resp = await fetch("http://localhost:3001/health");
-          $("checks").textContent = JSON.stringify(await safeJson(resp), null, 2);
-        } catch (err) {
-          $("checks").textContent = String(err);
-        }
-      });
+  <!-- ==================== NEW CLAIM ==================== -->
+  <div class="page" id="page-new-claim">
+    <div class="topbar">
+      <div>
+        <div class="breadcrumb">Dashboard <span>›</span> New Claim</div>
+        <div class="page-title">New Pre-Authorization Request</div>
+        <div class="page-sub">Submit a claim — the agent will analyze and assemble the package</div>
+      </div>
+      <button class="demo-btn" onclick="loadDemoPatient()">🎯 Load Demo Patient</button>
+    </div>
 
-      $("pingAi").addEventListener("click", async () => {
-        $("checks").textContent = "Pinging ai-engine...";
-        try {
-          const resp = await fetch("http://localhost:8001/health");
-          $("checks").textContent = JSON.stringify(await safeJson(resp), null, 2);
-        } catch (err) {
-          $("checks").textContent = String(err);
-        }
-      });
+    <div class="card">
+      <div class="card-header"><div class="card-title">Patient & Procedure Details</div></div>
+      <div class="card-body" style="padding:22px">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Patient ID</label>
+            <input type="text" id="f-pid" placeholder="e.g. PAT-1042" />
+          </div>
+          <div class="form-group">
+            <label>Patient Name</label>
+            <input type="text" id="f-pname" placeholder="Full name" />
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="f-dob" />
+          </div>
+          <div class="form-group">
+            <label>Insurance Provider</label>
+            <select id="f-insurer">
+              <option value="">Select insurer...</option>
+              <option>Star Health Insurance</option>
+              <option>HDFC ERGO Health</option>
+              <option>Bajaj Allianz Health</option>
+              <option>Niva Bupa Health</option>
+              <option>Care Health Insurance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Policy Number</label>
+            <input type="text" id="f-policy" placeholder="e.g. STAR-0029481" />
+          </div>
+          <div class="form-group">
+            <label>Treating Doctor</label>
+            <input type="text" id="f-doc" placeholder="Dr. Name" />
+          </div>
+          <div class="form-group">
+            <label>Planned Procedure</label>
+            <select id="f-proc">
+              <option value="">Select procedure...</option>
+              <option>Knee Replacement (CPT 27447)</option>
+              <option>Appendectomy (CPT 44950)</option>
+              <option>Cardiac Stenting (CPT 92928)</option>
+              <option>Cholecystectomy (CPT 47562)</option>
+              <option>Spinal Fusion (CPT 22612)</option>
+              <option>Hip Replacement (CPT 27130)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Surgery Date</label>
+            <input type="date" id="f-sdate" />
+          </div>
+          <div class="form-group full">
+            <label>Surgeon's Recommendation Note</label>
+            <textarea id="f-note" rows="5" placeholder="Paste the surgeon's recommendation note here..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Primary Diagnosis (ICD-10)</label>
+            <input type="text" id="f-icd" placeholder="Agent will auto-detect from note" style="color:var(--muted)"/>
+          </div>
+          <div class="form-group">
+            <label>Estimated Cost (₹)</label>
+            <input type="number" id="f-cost" placeholder="e.g. 450000" />
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div style="display:flex; gap:12px; justify-content:flex-end">
+          <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+          <button class="btn btn-primary" onclick="runAgent()">🚀 Run Agent Analysis</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      $("loadMock").addEventListener("click", async () => {
-        const note = `Patient Rajesh Kumar, 45-year-old male, presents with severe lower back pain radiating to the left leg for over 14 months.
-MRI confirms L4-L5 disc herniation with significant nerve root compression.
-Conservative treatments including 6 weeks of physiotherapy and two epidural steroid injections have failed to provide lasting relief.
-Pain score 8/10. Recommend proceeding with Lumbar Discectomy (L4-L5).`;
-        document.querySelector("textarea[name='surgeonNoteText']").value = note;
-      });
-    </script>
-  </body>
+  <!-- ==================== ANALYSIS ==================== -->
+  <div class="page" id="page-analysis">
+    <div class="topbar">
+      <div>
+        <div class="breadcrumb">Dashboard <span>›</span> Claim Analysis</div>
+        <div class="page-title">Claim Analysis — CLM-2402</div>
+        <div class="page-sub">Patient: Priya Subramaniam · Appendectomy · HDFC ERGO</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-secondary" onclick="navigate('preauth')">📋 View Package</button>
+        <button class="btn btn-primary" onclick="showNotif('Package sent to billing team!','success')">📤 Send to Billing</button>
+      </div>
+    </div>
+
+    <div class="analysis-grid three" style="margin-bottom:20px">
+      <!-- Extracted Info -->
+      <div class="card" style="grid-column:span 2">
+        <div class="card-header"><div class="card-title">🔎 Extracted Claim Information</div></div>
+        <div class="card-body" style="padding:18px 22px">
+          <div class="info-row">
+            <div class="info-key">Procedure</div>
+            <div class="info-val">Appendectomy — Laparoscopic</div>
+          </div>
+          <div class="info-row">
+            <div class="info-key">CPT Code</div>
+            <div class="info-val"><span class="code-chip">CPT 44950</span></div>
+          </div>
+          <div class="info-row">
+            <div class="info-key">ICD-10 Diagnosis</div>
+            <div class="info-val"><span class="code-chip">K37 — Unspecified appendicitis</span></div>
+          </div>
+          <div class="info-row">
+            <div class="info-key">Insurer</div>
+            <div class="info-val">HDFC ERGO Health Insurance</div>
+          </div>
+          <div class="info-row">
+            <div class="info-key">Policy Number</div>
+            <div class="info-val">HDFC-20938472</div>
+          </div>
+          <div class="info-row">
+            <div class="info-key">Max Approved Amount</div>
+            <div class="info-val">₹3,50,000</div>
+          </div>
+          <div class="info-row">
+            <div class="info-key">Pre-Auth Deadline</div>
+            <div class="info-val" style="color:var(--warn)">⚠️ Mar 11, 2026 (2 days remaining)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Score -->
+      <div class="risk-card">
+        <div class="section-title">Risk Score</div>
+        <div class="risk-ring high"><span class="risk-num">75%</span></div>
+        <div class="risk-label" style="color:var(--danger)">HIGH RISK</div>
+        <div class="risk-reason">Missing required document: Surgeon's Certificate of Medical Necessity. Historical rejection rate for this procedure: 22%.</div>
+        <div style="margin-top:16px">
+          <button class="btn btn-danger btn-sm" style="width:100%;justify-content:center" onclick="navigate('appeal')">⚡ Prepare Appeal</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-grid" style="margin-bottom:20px">
+      <!-- Document Checklist -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📄 Document Checklist</div>
+          <span style="font-size:12px;color:var(--muted)">4/5 found</span>
+        </div>
+        <div class="card-body" style="padding:16px">
+          <div class="checklist">
+            <div class="check-item found">
+              <div class="check-icon">✅</div>
+              <div>
+                <div class="check-name">Hospital Admission Form</div>
+                <div class="check-detail">Found in EHR · Uploaded Mar 06, 2026</div>
+              </div>
+            </div>
+            <div class="check-item found">
+              <div class="check-icon">✅</div>
+              <div>
+                <div class="check-name">CBC & Blood Report</div>
+                <div class="check-detail">Found in EHR · WBC elevated (13.2 × 10³) — supports diagnosis</div>
+              </div>
+            </div>
+            <div class="check-item found">
+              <div class="check-icon">✅</div>
+              <div>
+                <div class="check-name">Ultrasound Abdomen Report</div>
+                <div class="check-detail">Found in EHR · Confirms appendix inflammation</div>
+              </div>
+            </div>
+            <div class="check-item found">
+              <div class="check-icon">✅</div>
+              <div>
+                <div class="check-name">Prior Conservative Treatment Notes</div>
+                <div class="check-detail">Found · Antibiotic therapy attempted (Amoxicillin, 5 days) — failed</div>
+              </div>
+            </div>
+            <div class="check-item missing">
+              <div class="check-icon">❌</div>
+              <div>
+                <div class="check-name">Surgeon's Certificate of Medical Necessity</div>
+                <div class="check-detail">Required by HDFC ERGO · Not found in EHR</div>
+                <div class="check-alert">🔔 Alert sent to Dr. Anand Krishnan — certificate needed before Mar 11</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EHR Evidence -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">🏥 EHR Evidence Extracted</div></div>
+        <div class="card-body" style="padding:16px">
+          <div class="section-title">Diagnosis History</div>
+          <div class="evidence-item">
+            <div>
+              <div class="ev-name">Acute Appendicitis</div>
+              <div class="ev-date">ICD-10: K37 · Confirmed Mar 06, 2026</div>
+            </div>
+            <span class="ev-relevance">Primary</span>
+          </div>
+          <div class="evidence-item">
+            <div>
+              <div class="ev-name">Abdominal Pain — RLQ</div>
+              <div class="ev-date">Onset: Mar 04, 2026 · Referred to surgery</div>
+            </div>
+            <span class="ev-relevance">Supporting</span>
+          </div>
+          <div class="section-title" style="margin-top:14px">Lab Reports</div>
+          <div class="evidence-item">
+            <div>
+              <div class="ev-name">Complete Blood Count (CBC)</div>
+              <div class="ev-date">WBC: 13.2 × 10³/μL (elevated) · Mar 06</div>
+            </div>
+            <span class="ev-relevance">Relevant</span>
+          </div>
+          <div class="evidence-item">
+            <div>
+              <div class="ev-name">Ultrasound — Abdomen & Pelvis</div>
+              <div class="ev-date">Appendix diameter: 9mm, non-compressible · Mar 06</div>
+            </div>
+            <span class="ev-relevance">Relevant</span>
+          </div>
+          <div class="evidence-item" style="opacity:.45">
+            <div>
+              <div class="ev-name">Thyroid Function Test</div>
+              <div class="ev-date">Feb 2026 · Not relevant to this claim</div>
+            </div>
+            <span style="font-size:11px;color:var(--muted)">Excluded</span>
+          </div>
+          <div class="section-title" style="margin-top:14px">Medications</div>
+          <div class="evidence-item">
+            <div>
+              <div class="ev-name">Amoxicillin 500mg</div>
+              <div class="ev-date">Conservative treatment attempted · Failed after 5 days</div>
+            </div>
+            <span class="ev-relevance">Supports necessity</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PRE-AUTH PACKAGE ==================== -->
+  <div class="page" id="page-preauth">
+    <div class="topbar">
+      <div>
+        <div class="breadcrumb">Dashboard <span>›</span> Pre-Auth Package</div>
+        <div class="page-title">Pre-Authorization Package — CLM-2403</div>
+        <div class="page-sub">Patient: Arun Mehta · Cardiac Stenting · Bajaj Allianz</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-secondary">⬇ Download PDF</button>
+        <button class="btn btn-primary" onclick="showNotif('📤 Package submitted to Bajaj Allianz!','success')">Submit Package</button>
+      </div>
+    </div>
+
+    <div class="analysis-grid">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📋 Filled Pre-Authorization Form</div>
+            <span class="badge medium">● Medium Risk</span>
+          </div>
+          <div class="card-body" style="padding:18px 22px">
+            <div class="form-field-display">
+              <div class="ffd-label">Patient Full Name</div>
+              <div class="ffd-value">Arun Mehta</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Policy Number</div>
+              <div class="ffd-value">BAJAJ-ALZ-8847291</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Procedure Requested</div>
+              <div class="ffd-value">Percutaneous Coronary Intervention — Cardiac Stenting</div>
+              <div class="ffd-cited">📎 Source: Surgeon's note, Dr. Suresh Rajan · Mar 05, 2026</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">CPT / Procedure Code</div>
+              <div class="ffd-value">CPT 92928</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Primary Diagnosis (ICD-10)</div>
+              <div class="ffd-value">I25.10 — Atherosclerotic heart disease of native coronary artery</div>
+              <div class="ffd-cited">📎 Confirmed via EHR diagnosis history + Angiogram Report Mar 03</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Medical Necessity Justification</div>
+              <div class="ffd-value">Patient presents with >70% stenosis in LAD artery confirmed by coronary angiogram. Conservative management with dual antiplatelet therapy (Aspirin + Clopidogrel) failed over 6 weeks. Immediate revascularization required to prevent myocardial infarction.</div>
+              <div class="ffd-cited">📎 Cited: Angiogram Mar 03 · ECG Mar 04 · Medication history Feb–Mar 2026</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Estimated Procedure Cost</div>
+              <div class="ffd-value">₹2,80,000</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Treating Cardiologist</div>
+              <div class="ffd-value">Dr. Suresh Rajan · MBBS, DM (Cardiology) · Reg. No. TN-29471</div>
+            </div>
+            <div class="form-field-display">
+              <div class="ffd-label">Prior Authorization Deadline</div>
+              <div class="ffd-value" style="color:var(--warn)">March 12, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header"><div class="card-title">📎 Attached Documents</div></div>
+          <div class="card-body" style="padding:16px">
+            <div class="check-item found" style="margin-bottom:8px">
+              <div class="check-icon">✅</div>
+              <div><div class="check-name">Coronary Angiogram Report</div><div class="check-detail">Mar 03, 2026 · Confirms 72% LAD stenosis</div></div>
+            </div>
+            <div class="check-item found" style="margin-bottom:8px">
+              <div class="check-icon">✅</div>
+              <div><div class="check-name">ECG Report</div><div class="check-detail">Mar 04, 2026 · ST depression noted</div></div>
+            </div>
+            <div class="check-item found" style="margin-bottom:8px">
+              <div class="check-icon">✅</div>
+              <div><div class="check-name">Medication History</div><div class="check-detail">Feb–Mar 2026 · Antiplatelet therapy documented</div></div>
+            </div>
+            <div class="check-item missing">
+              <div class="check-icon">⚠️</div>
+              <div>
+                <div class="check-name">Echocardiogram Report</div>
+                <div class="check-detail">Required within 90 days · Found in EHR but not attached</div>
+                <div class="check-alert">🔔 Please attach Echo report from Mar 2026 before submitting</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 Risk Score Breakdown</div></div>
+          <div class="card-body" style="padding:18px 22px">
+            <div class="risk-ring medium" style="width:90px;height:90px;margin-bottom:12px;font-size:22px">
+              <span class="risk-num">55%</span>
+            </div>
+            <div class="risk-label" style="color:var(--warn)">MEDIUM RISK</div>
+            <div class="divider"></div>
+            <div class="info-row">
+              <div class="info-key">Documentation Completeness</div>
+              <div class="info-val" style="color:var(--warn)">75%</div>
+            </div>
+            <div class="info-row">
+              <div class="info-key">Diagnosis Code Match</div>
+              <div class="info-val" style="color:var(--success)">✓ Exact Match</div>
+            </div>
+            <div class="info-row">
+              <div class="info-key">Historical Rejection Rate</div>
+              <div class="info-val">18% (CPT 92928)</div>
+            </div>
+            <div class="info-row">
+              <div class="info-key">Missing Documents</div>
+              <div class="info-val" style="color:var(--danger)">1 (Echocardiogram)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== APPEAL CENTER ==================== -->
+  <div class="page" id="page-appeal">
+    <div class="topbar">
+      <div>
+        <div class="breadcrumb">Dashboard <span>›</span> Appeal Center</div>
+        <div class="page-title">Appeal Center — CLM-2402</div>
+        <div class="page-sub">Rejected claim · Auto-generated appeal · Priya Subramaniam · HDFC ERGO</div>
+      </div>
+      <button class="btn btn-primary" onclick="showNotif('✉️ Appeal letter sent to HDFC ERGO!','success')">Send Appeal Letter</button>
+    </div>
+
+    <div class="analysis-grid">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header"><div class="card-title">⚡ Rejection Timeline & Actions</div></div>
+          <div class="card-body" style="padding:20px 22px">
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-title">Claim Submitted</div>
+                <div class="tl-body">CLM-2402 submitted to HDFC ERGO · Mar 07, 2026, 10:14 AM</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot yellow"></div>
+                <div class="tl-title">Under Review</div>
+                <div class="tl-body">HDFC ERGO acknowledged receipt · Mar 07, 2026, 2:30 PM</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot red"></div>
+                <div class="tl-title">Rejection Received</div>
+                <div class="tl-body">Reason: "Surgeon's Certificate of Medical Necessity not attached" · Mar 08, 2026, 9:00 AM</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot blue"></div>
+                <div class="tl-title">Agent Identified Corrective Action</div>
+                <div class="tl-body">Auto-mapped rejection → Attach signed certificate. Appeal letter drafted automatically.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot" style="background:var(--muted)"></div>
+                <div class="tl-title" style="color:var(--muted)">Appeal Pending Submission</div>
+                <div class="tl-body">Review letter below and click Send Appeal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔧 Corrective Actions Mapped</div></div>
+          <div class="card-body" style="padding:16px 22px">
+            <div class="info-row">
+              <div class="info-key">Rejection Reason</div>
+              <div class="info-val" style="color:var(--danger)">Missing: Medical Necessity Certificate</div>
+            </div>
+            <div class="info-row">
+              <div class="info-key">Corrective Action</div>
+              <div class="info-val">Attach Surgeon's Certificate (signed)</div>
+            </div>
+            <div class="info-row">
+              <div class="info-key">Document Status</div>
+              <div class="info-val" style="color:var(--success)">✅ Obtained from Dr. Anand Krishnan</div>
+            </div>
+            <div class="info-row">
+              <div class="info-key">Appeal Deadline</div>
+              <div class="info-val" style="color:var(--warn)">March 22, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">✉️ Auto-Generated Appeal Letter</div>
+          <button class="btn btn-secondary btn-sm">✏️ Edit</button>
+        </div>
+        <div class="card-body" style="padding:18px 22px">
+          <div class="appeal-letter">To,
+The Pre-Authorization Department,
+HDFC ERGO Health Insurance Co. Ltd.
+
+Subject: Appeal Against Rejection of Pre-Authorization — Claim ID: CLM-2402
+Patient: Priya Subramaniam | Policy No.: HDFC-20938472
+
+Dear Sir/Madam,
+
+We are writing to formally appeal the rejection of the above-referenced pre-authorization claim for a Laparoscopic Appendectomy (CPT Code: 44950) for our patient, Ms. Priya Subramaniam.
+
+Reason for Rejection Cited:
+Your correspondence dated March 8, 2026 indicated that the claim was rejected due to the absence of the "Surgeon's Certificate of Medical Necessity."
+
+Response & Corrective Action:
+We acknowledge the omission and hereby attach the signed Surgeon's Certificate of Medical Necessity, issued by Dr. Anand Krishnan (MBBS, MS — General Surgery, Reg. No. TN-18472), confirming the urgent need for surgical intervention.
+
+Supporting Clinical Evidence:
+The patient presented with acute right lower quadrant pain on March 4, 2026. The diagnosis of acute appendicitis (ICD-10: K37) was confirmed through:
+  • CBC: WBC 13.2 × 10³/μL (elevated)
+  • Ultrasound: Appendix diameter 9mm, non-compressible
+  • Failed conservative management: Amoxicillin 500mg × 5 days
+
+Surgery was clinically necessary to prevent perforation and sepsis. All other required documents have been verified as present in the submitted package.
+
+We respectfully request a review of this appeal at the earliest. Please find all documents attached herewith.
+
+Yours sincerely,
+Revenue Cycle Management Team
+Kathir Memorial Hospital
+Tel: +91-44-2890-XXXX
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HISTORY ==================== -->
+  <div class="page" id="page-history">
+    <div class="topbar">
+      <div>
+        <div class="breadcrumb">Dashboard <span>›</span> All Claims</div>
+        <div class="page-title">Claims History</div>
+        <div class="page-sub">Complete log of all processed claims</div>
+      </div>
+      <button class="btn btn-primary" onclick="navigate('new-claim')">＋ New Claim</button>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">All Claims</div>
+        <div style="display:flex;gap:8px">
+          <input type="text" placeholder="Search claims..." style="padding:7px 12px;font-size:12px;width:200px"/>
+          <select style="padding:7px 12px;font-size:12px">
+            <option>All Status</option>
+            <option>Approved</option>
+            <option>Rejected</option>
+            <option>Pending</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <table>
+          <thead>
+            <tr><th>Claim ID</th><th>Patient</th><th>Procedure</th><th>Insurer</th><th>Cost</th><th>Submitted</th><th>Risk</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="code-chip">CLM-2401</span></td><td>Ramesh K.</td><td>Knee Replacement</td><td>Star Health</td><td>₹4,50,000</td><td>Mar 08</td><td><span class="badge low">● Low</span></td><td><span class="badge approved">Approved</span></td><td><button class="btn btn-secondary btn-sm" onclick="navigate('analysis')">View</button></td></tr>
+            <tr><td><span class="code-chip">CLM-2402</span></td><td>Priya S.</td><td>Appendectomy</td><td>HDFC ERGO</td><td>₹1,80,000</td><td>Mar 07</td><td><span class="badge high">● High</span></td><td><span class="badge rejected">Rejected</span></td><td><button class="btn btn-danger btn-sm" onclick="navigate('appeal')">Appeal</button></td></tr>
+            <tr><td><span class="code-chip">CLM-2403</span></td><td>Arun M.</td><td>Cardiac Stenting</td><td>Bajaj Allianz</td><td>₹2,80,000</td><td>Mar 06</td><td><span class="badge medium">● Medium</span></td><td><span class="badge pending">Pending</span></td><td><button class="btn btn-secondary btn-sm" onclick="navigate('preauth')">Package</button></td></tr>
+            <tr><td><span class="code-chip">CLM-2404</span></td><td>Deepa R.</td><td>Cholecystectomy</td><td>Star Health</td><td>₹2,10,000</td><td>Mar 05</td><td><span class="badge low">● Low</span></td><td><span class="badge approved">Approved</span></td><td><button class="btn btn-secondary btn-sm">View</button></td></tr>
+            <tr><td><span class="code-chip">CLM-2405</span></td><td>Vikram T.</td><td>Spinal Fusion</td><td>HDFC ERGO</td><td>₹5,50,000</td><td>Mar 04</td><td><span class="badge medium">● Medium</span></td><td><span class="badge pending">Pending</span></td><td><button class="btn btn-secondary btn-sm">View</button></td></tr>
+            <tr><td><span class="code-chip">CLM-2398</span></td><td>Meena J.</td><td>Hip Replacement</td><td>Niva Bupa</td><td>₹3,90,000</td><td>Feb 28</td><td><span class="badge low">● Low</span></td><td><span class="badge approved">Approved</span></td><td><button class="btn btn-secondary btn-sm">View</button></td></tr>
+            <tr><td><span class="code-chip">CLM-2395</span></td><td>Suresh P.</td><td>Knee Replacement</td><td>Care Health</td><td>₹4,20,000</td><td>Feb 25</td><td><span class="badge high">● High</span></td><td><span class="badge rejected">Rejected</span></td><td><button class="btn btn-danger btn-sm">Appeal</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- LOADER OVERLAY -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-spinner"></div>
+  <div class="loader-text">Agent Analyzing...</div>
+  <div class="loader-step">Powered by ClaimIQ</div>
+  <div class="loader-steps-list">
+    <div class="loader-step-item" id="ls1">📄 Parsing surgeon's recommendation note...</div>
+    <div class="loader-step-item" id="ls2">🔍 Looking up ICD-10 & CPT codes...</div>
+    <div class="loader-step-item" id="ls3">📋 Retrieving insurance policy rules...</div>
+    <div class="loader-step-item" id="ls4">🏥 Scanning EHR for supporting evidence...</div>
+    <div class="loader-step-item" id="ls5">⚠️ Running gap analysis...</div>
+    <div class="loader-step-item" id="ls6">📊 Scoring rejection risk...</div>
+    <div class="loader-step-item" id="ls7">✅ Assembling pre-authorization package...</div>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<script>
+  // NAVIGATION
+  function navigate(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    const navMap = {
+      'dashboard':'.nav-item:nth-child(1)',
+      'new-claim':'.nav-item:nth-child(2)',
+      'analysis':'.nav-item:nth-child(3)',
+      'preauth':'.nav-item:nth-child(4)',
+      'appeal':'.nav-item:nth-child(5)',
+      'history':'.nav-item:nth-child(6)',
+    };
+    const items = document.querySelectorAll('.nav-item');
+    const idx = ['dashboard','new-claim','analysis','preauth','appeal','history'].indexOf(page);
+    if(idx >= 0) items[idx].classList.add('active');
+  }
+
+  // DEMO DATA
+  function loadDemoPatient() {
+    document.getElementById('f-pid').value = 'PAT-1042';
+    document.getElementById('f-pname').value = 'Priya Subramaniam';
+    document.getElementById('f-dob').value = '1990-06-15';
+    document.getElementById('f-insurer').value = 'HDFC ERGO Health';
+    document.getElementById('f-policy').value = 'HDFC-20938472';
+    document.getElementById('f-doc').value = 'Dr. Anand Krishnan';
+    document.getElementById('f-proc').value = 'Appendectomy (CPT 44950)';
+    document.getElementById('f-icd').value = 'K37 — Unspecified appendicitis';
+    document.getElementById('f-cost').value = '180000';
+    document.getElementById('f-note').value = 'Patient Priya Subramaniam, 35F, presents with acute right lower quadrant pain radiating to the periumbilical region for the past 48 hours. CBC shows leukocytosis (WBC 13.2 × 10³). Ultrasound confirms non-compressible appendix of 9mm diameter. Conservative antibiotic management with Amoxicillin 500mg for 5 days has failed to resolve symptoms. Immediate laparoscopic appendectomy (CPT 44950) is recommended to prevent perforation and peritonitis. Diagnosis: Acute appendicitis (ICD-10: K37).';
+    showNotif('✅ Demo patient data loaded!', 'success');
+  }
+
+  function resetForm() {
+    ['f-pid','f-pname','f-dob','f-insurer','f-policy','f-doc','f-proc','f-sdate','f-note','f-icd','f-cost'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+  }
+
+  // AGENT LOADER SIMULATION
+  function runAgent() {
+    const pid = document.getElementById('f-pid').value;
+    const proc = document.getElementById('f-proc').value;
+    if(!pid || !proc) {
+      showNotif('⚠️ Please fill Patient ID and Procedure', 'error');
+      return;
+    }
+    const loader = document.getElementById('loader');
+    loader.classList.add('show');
+    const steps = ['ls1','ls2','ls3','ls4','ls5','ls6','ls7'];
+    steps.forEach((id,i) => {
+      setTimeout(() => {
+        document.getElementById(id).classList.add(i < steps.length - 1 ? 'done' : 'active');
+        if(i > 0) document.getElementById(steps[i-1]).classList.add('done');
+      }, i * 700);
+    });
+    setTimeout(() => {
+      loader.classList.remove('show');
+      steps.forEach(id => document.getElementById(id).classList.remove('done','active'));
+      navigate('analysis');
+      showNotif('✅ Analysis complete! Risk: HIGH — 1 document missing', 'success');
+    }, steps.length * 700 + 400);
+  }
+
+  // NOTIFICATION
+  function showNotif(msg, type='success') {
+    const n = document.getElementById('notif');
+    n.className = 'notif show ' + type;
+    n.innerHTML = (type === 'success' ? '✅ ' : '⚠️ ') + msg;
+    setTimeout(() => n.classList.remove('show'), 3500);
+  }
+
+  // CLOCK
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+</script>
+</body>
 </html>
-
