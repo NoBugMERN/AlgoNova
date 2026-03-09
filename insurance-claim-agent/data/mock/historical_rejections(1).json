@@ -1,0 +1,115 @@
+{
+  "rejection_log": [
+    {
+      "claim_id": "CLM_001",
+      "patient_id": "PAT_010",
+      "insurer_id": "INS_A",
+      "cpt_code": "CPT_63030",
+      "rejection_reason": "Missing Certificate of Medical Necessity",
+      "rejection_category": "MISSING_DOCUMENT",
+      "date": "2023-03-15",
+      "appealed": true,
+      "appeal_outcome": "Approved"
+    },
+    {
+      "claim_id": "CLM_002",
+      "patient_id": "PAT_011",
+      "insurer_id": "INS_B",
+      "cpt_code": "CPT_63030",
+      "rejection_reason": "Nerve Conduction Study not submitted",
+      "rejection_category": "MISSING_DOCUMENT",
+      "date": "2023-04-20",
+      "appealed": false,
+      "appeal_outcome": null
+    },
+    {
+      "claim_id": "CLM_003",
+      "patient_id": "PAT_012",
+      "insurer_id": "INS_C",
+      "cpt_code": "CPT_27447",
+      "rejection_reason": "ICD-10 code M17.12 not in qualifying list for INS_C",
+      "rejection_category": "INCORRECT_CODING",
+      "date": "2023-05-08",
+      "appealed": true,
+      "appeal_outcome": "Rejected"
+    },
+    {
+      "claim_id": "CLM_004",
+      "patient_id": "PAT_013",
+      "insurer_id": "INS_A",
+      "cpt_code": "CPT_47562",
+      "rejection_reason": "Ultrasound report older than 90 days",
+      "rejection_category": "STALE_DOCUMENT",
+      "date": "2023-06-14",
+      "appealed": true,
+      "appeal_outcome": "Approved"
+    },
+    {
+      "claim_id": "CLM_005",
+      "patient_id": "PAT_014",
+      "insurer_id": "INS_B",
+      "cpt_code": "CPT_27447",
+      "rejection_reason": "Physiotherapy records incomplete — less than 4 weeks documented",
+      "rejection_category": "INSUFFICIENT_TREATMENT_HISTORY",
+      "date": "2023-07-22",
+      "appealed": false,
+      "appeal_outcome": null
+    },
+    {
+      "claim_id": "CLM_006",
+      "patient_id": "PAT_015",
+      "insurer_id": "INS_C",
+      "cpt_code": "CPT_63030",
+      "rejection_reason": "Pain Assessment Scale Record missing",
+      "rejection_category": "MISSING_DOCUMENT",
+      "date": "2023-08-30",
+      "appealed": true,
+      "appeal_outcome": "Approved"
+    },
+    {
+      "claim_id": "CLM_007",
+      "patient_id": "PAT_016",
+      "insurer_id": "INS_A",
+      "cpt_code": "CPT_27447",
+      "rejection_reason": "BMI exceeds policy threshold of 40",
+      "rejection_category": "POLICY_MISMATCH",
+      "date": "2023-09-11",
+      "appealed": false,
+      "appeal_outcome": null
+    },
+    {
+      "claim_id": "CLM_008",
+      "patient_id": "PAT_017",
+      "insurer_id": "INS_B",
+      "cpt_code": "CPT_47562",
+      "rejection_reason": "CBC report not submitted",
+      "rejection_category": "MISSING_DOCUMENT",
+      "date": "2023-10-05",
+      "appealed": true,
+      "appeal_outcome": "Approved"
+    },
+    {
+      "claim_id": "CLM_009",
+      "patient_id": "PAT_018",
+      "insurer_id": "INS_C",
+      "cpt_code": "CPT_27447",
+      "rejection_reason": "Cardiology Fitness Certificate not provided",
+      "rejection_category": "MISSING_DOCUMENT",
+      "date": "2023-11-18",
+      "appealed": true,
+      "appeal_outcome": "Approved"
+    },
+    {
+      "claim_id": "CLM_010",
+      "patient_id": "PAT_019",
+      "insurer_id": "INS_A",
+      "cpt_code": "CPT_63030",
+      "rejection_reason": "Surgeon recommendation letter unsigned",
+      "rejection_category": "INVALID_DOCUMENT",
+      "date": "2023-12-02",
+      "appealed": true,
+      "appeal_outcome": "Approved"
+    }
+  ]
+}
+

@@ -1,0 +1,59 @@
+{
+  "patient_id": "PAT_001",
+  "name": "Rajesh Kumar",
+  "dob": "1978-04-12",
+  "gender": "Male",
+  "blood_group": "B+",
+  "insurer_id": "INS_A",
+  "policy_number": "POL-2024-88321",
+  "diagnosis_history": [
+    { "icd10": "M51.1", "description": "Lumbar disc herniation", "date": "2023-06-10" },
+    { "icd10": "M54.5", "description": "Chronic low back pain", "date": "2022-11-03" }
+  ],
+  "medications": [
+    { "name": "Ibuprofen", "dosage": "400mg", "frequency": "Twice daily", "since": "2023-06-15" },
+    { "name": "Pregabalin", "dosage": "75mg", "frequency": "Once at night", "since": "2023-08-01" }
+  ],
+  "prior_treatments": [
+    { "type": "Physiotherapy", "duration": "6 weeks", "outcome": "Partial relief", "date": "2023-07-01" },
+    { "type": "Epidural steroid injection", "outcome": "Temporary relief", "date": "2023-10-15" }
+  ],
+  "lab_reports": [
+    {
+      "report_id": "LAB_001",
+      "type": "MRI Lumbar Spine",
+      "date": "2023-11-20",
+      "relevant": true,
+      "findings": "L4-L5 disc herniation with nerve root compression"
+    },
+    {
+      "report_id": "LAB_002",
+      "type": "X-Ray Lumbar Spine",
+      "date": "2023-09-05",
+      "relevant": true,
+      "findings": "Reduced disc space at L4-L5"
+    },
+    {
+      "report_id": "LAB_003",
+      "type": "Complete Blood Count",
+      "date": "2024-01-10",
+      "relevant": false,
+      "findings": "Normal range"
+    },
+    {
+      "report_id": "LAB_004",
+      "type": "Lipid Profile",
+      "date": "2024-01-10",
+      "relevant": false,
+      "findings": "Slightly elevated LDL"
+    },
+    {
+      "report_id": "LAB_005",
+      "type": "Urine Routine",
+      "date": "2024-01-10",
+      "relevant": false,
+      "findings": "Normal"
+    }
+  ]
+}
+
