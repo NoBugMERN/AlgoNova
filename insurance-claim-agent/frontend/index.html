@@ -598,6 +598,7 @@
     .signup-proof-panel { display:none; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -674,18 +675,15 @@
           <span class="auth-checkbox-custom"></span>
           Keep me signed in
         </label>
-        <span class="auth-forgot">Forgot password?</span>
+        <span class="auth-forgot" onclick="handleForgotPassword()">Forgot password?</span>
       </div>
       <button class="auth-btn" onclick="handleLogin()">Sign In to ClaimIQ →</button>
       <div class="auth-divider">or continue with</div>
-      <button class="auth-oauth" onclick="handleOAuth()">
+      <button class="auth-oauth" onclick="handleGoogleOAuth()">
         <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Sign in with Google
       </button>
-      <button class="auth-oauth" onclick="handleOAuth()">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#f25022" d="M1 1h10v10H1z"/><path fill="#00a4ef" d="M13 1h10v10H13z"/><path fill="#7fba00" d="M1 13h10v10H1z"/><path fill="#ffb900" d="M13 13h10v10H13z"/></svg>
-        Sign in with Microsoft
-      </button>
+
     </div>
   </div>
 </div>
@@ -743,7 +741,7 @@
         </div>
         <button class="auth-btn" onclick="suNext(1)" style="margin-top:4px">Continue →</button>
         <div class="auth-divider">or sign up with</div>
-        <button class="auth-oauth" onclick="handleOAuth()">
+        <button class="auth-oauth" onclick="handleGoogleOAuth()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
@@ -788,25 +786,24 @@
 
       <!-- Step 3 -->
       <div class="signup-form-step" id="su-form3">
-        <div style="text-align:center;padding:16px 0 24px">
-          <div style="font-size:44px;margin-bottom:14px">📬</div>
-          <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:8px">Check your inbox</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px">
-            Verification code sent to <strong id="su-email-display" style="color:var(--text)"></strong>
+        <div style="text-align:center;padding:20px 0 28px">
+          <div style="font-size:52px;margin-bottom:18px;animation:bounce 1.5s infinite">📬</div>
+          <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:10px">Confirm your email</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:24px">
+            We sent a confirmation link to<br>
+            <strong id="su-email-display" style="color:var(--text)"></strong><br>
+            <span style="font-size:12px">Click the link in the email, then come back and click below.</span>
           </div>
         </div>
-        <div class="auth-form-group">
-          <label class="auth-label">Verification Code</label>
-          <input type="text" class="auth-input" id="su-code" placeholder="000000" maxlength="6"
-            style="font-family:'Syne',sans-serif;font-size:24px;font-weight:700;letter-spacing:8px;text-align:center"/>
-        </div>
-        <div style="text-align:center;margin-bottom:18px">
-          <span style="font-size:13px;color:var(--muted)">Didn't receive it? </span>
-          <span style="font-size:13px;color:var(--accent);cursor:pointer;font-weight:500" onclick="showSignupAlert('Code resent!','success')">Resend code</span>
-        </div>
-        <div class="auth-btn-row">
-          <button class="auth-btn secondary" onclick="suPrev(3)">← Back</button>
-          <button class="auth-btn" onclick="suVerify()">Create Account ✓</button>
+        <div id="su-confirm-alert" style="display:none;padding:12px 14px;border-radius:9px;font-size:13px;margin-bottom:16px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--success);text-align:center"></div>
+        <button class="auth-btn" onclick="suCheckConfirmed()" id="su-confirm-btn">
+          ✅ I've confirmed my email — Enter Dashboard
+        </button>
+        <div style="text-align:center;margin-top:14px">
+          <span style="font-size:12px;color:var(--muted)">Didn't get it? </span>
+          <span style="font-size:12px;color:var(--accent);cursor:pointer;font-weight:500" onclick="suResendEmail()">Resend email</span>
+          <span style="font-size:12px;color:var(--muted)"> · </span>
+          <span style="font-size:12px;color:var(--muted);cursor:pointer" onclick="suSetStep(1)">Use different email</span>
         </div>
       </div>
     </div>
@@ -1197,71 +1194,189 @@ Kathir Memorial Hospital</div>
 <!-- NOTIFICATION -->
 <div class="notif" id="notif"></div>
 
-<script>
-  // ===== SESSION STATE =====
-  let currentUser = null;
 
-  // Check if already logged in (sessionStorage persists within tab)
-  function init() {
-    const saved = sessionStorage.getItem('claimiq_user');
-    if (saved) {
-      currentUser = JSON.parse(saved);
-      enterApp();
-    } else {
+<script>
+  // ============================================================
+  //  SUPABASE CONFIG
+  // ============================================================
+  const SUPABASE_URL  = 'https://wzpxgrovoipraruofmuh.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_dgXBtUvPYyWZ0v48Q0hTBA_PFu-QOLi';
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  // ============================================================
+  //  STATE
+  // ============================================================
+  let currentUser    = null;
+  let currentProfile = null;
+
+  // ============================================================
+  //  BOOT
+  // ============================================================
+  async function init() {
+    showLoadingOverlay(true);
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        currentUser = session.user;
+        await loadProfile();
+        enterApp();
+      } else {
+        showScreen('login');
+      }
+    } catch(e) {
+      console.error('init error', e);
       showScreen('login');
+    } finally {
+      showLoadingOverlay(false);
     }
+
+    // Handle OAuth redirect back + email confirmation redirect back
+    sb.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        currentUser = session.user;
+        await loadProfile();
+
+        // Coming back from Google OAuth
+        if (!currentProfile?.organization) {
+          populateOAuthSignupFields();
+          showScreen('signup');
+          suSetStep(2);
+        } else {
+          enterApp();
+        }
+
+      } else if (event === 'USER_UPDATED' && session) {
+        // Email confirmed — user clicked the link, came back
+        currentUser = session.user;
+        await loadProfile();
+        if (window._pendingProfile) {
+          try { await saveProfile(window._pendingProfile); window._pendingProfile = null; } catch(e) {}
+        }
+        enterApp();
+
+      } else if (event === 'SIGNED_OUT') {
+        currentUser = null;
+        currentProfile = null;
+        showScreen('login');
+      }
+    });
   }
 
-  // ===== SCREEN ROUTER =====
+  // ============================================================
+  //  PROFILE
+  // ============================================================
+  async function loadProfile() {
+    if (!currentUser) return;
+    const { data, error } = await sb
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .single();
+    if (!error && data) currentProfile = data;
+  }
+
+  async function saveProfile(profileData) {
+    const { error } = await sb
+      .from('profiles')
+      .upsert({ id: currentUser.id, ...profileData, updated_at: new Date().toISOString() });
+    if (error) throw error;
+    currentProfile = { ...currentProfile, ...profileData };
+  }
+
+  // ============================================================
+  //  SCREEN ROUTER
+  // ============================================================
   function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
   }
 
   function enterApp() {
-    if (currentUser) {
-      // Update sidebar user info
-      const initials = ((currentUser.firstName || 'U')[0] + (currentUser.lastName || 'S')[0]).toUpperCase();
-      document.getElementById('user-avatar').textContent = initials;
-      document.getElementById('user-display-name').textContent = currentUser.firstName + ' ' + (currentUser.lastName || '');
-      document.getElementById('user-display-role').textContent = currentUser.role || 'User';
-    }
+    const p    = currentProfile || {};
+    const meta = currentUser?.user_metadata || {};
+    const firstName = p.first_name || meta.full_name?.split(' ')[0] || currentUser?.email?.split('@')[0] || 'User';
+    const lastName  = p.last_name  || meta.full_name?.split(' ').slice(1).join(' ') || '';
+    const role      = p.role || 'User';
+    const initials  = ((firstName[0] || 'U') + (lastName[0] || '')).toUpperCase();
+    document.getElementById('user-avatar').textContent       = initials;
+    document.getElementById('user-display-name').textContent = firstName + (lastName ? ' ' + lastName : '');
+    document.getElementById('user-display-role').textContent = role;
     showScreen('app');
     navigate('dashboard');
   }
 
-  // ===== LOGIN =====
-  function handleLogin() {
+  // ============================================================
+  //  LOGIN
+  // ============================================================
+  async function handleLogin() {
     const email = document.getElementById('login-email').value.trim();
     const pwd   = document.getElementById('login-password').value;
-    if (!email) { showLoginAlert('Please enter your work email.', 'error'); return; }
-    if (!email.includes('@')) { showLoginAlert('Please enter a valid email address.', 'error'); return; }
-    if (!pwd) { showLoginAlert('Please enter your password.', 'error'); return; }
+    if (!email)              { showLoginAlert('Please enter your work email.', 'error'); return; }
+    if (!email.includes('@')){ showLoginAlert('Please enter a valid email address.', 'error'); return; }
+    if (!pwd)                { showLoginAlert('Please enter your password.', 'error'); return; }
 
     showLoginAlert('Signing in...', 'success');
-    setTimeout(() => {
-      currentUser = { firstName: email.split('@')[0], lastName: '', role: 'Revenue Cycle Manager', email };
-      sessionStorage.setItem('claimiq_user', JSON.stringify(currentUser));
-      enterApp();
-    }, 800);
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+    if (error) {
+      const msg = error.message.includes('Invalid login') || error.message.includes('Email not confirmed')
+        ? 'Incorrect email or password, or email not yet confirmed.' : error.message;
+      showLoginAlert(msg, 'error');
+      return;
+    }
+    currentUser = data.user;
+    await loadProfile();
+    enterApp();
   }
 
   function showLoginAlert(msg, type) {
     const el = document.getElementById('login-alert');
-    el.textContent = msg; el.className = 'auth-alert ' + type;
+    el.textContent = msg;
+    el.className = 'auth-alert ' + type;
   }
 
-  // ===== LOGOUT =====
-  function handleLogout() {
-    sessionStorage.removeItem('claimiq_user');
+  // ============================================================
+  //  LOGOUT
+  // ============================================================
+  async function handleLogout() {
+    await sb.auth.signOut();
     currentUser = null;
-    document.getElementById('login-email').value = '';
+    currentProfile = null;
+    document.getElementById('login-email').value    = '';
     document.getElementById('login-password').value = '';
     document.getElementById('login-alert').className = 'auth-alert';
     showScreen('login');
   }
 
-  // ===== SIGNUP FLOW =====
+  // ============================================================
+  //  GOOGLE OAUTH ONLY
+  // ============================================================
+  async function handleGoogleOAuth() {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    });
+    if (error) showLoginAlert('Google sign-in failed: ' + error.message, 'error');
+  }
+
+  function populateOAuthSignupFields() {
+    const meta = currentUser?.user_metadata || {};
+    const nameParts = (meta.full_name || '').split(' ');
+    const fn = document.getElementById('su-fn');
+    const ln = document.getElementById('su-ln');
+    if (fn && !fn.value) fn.value = nameParts[0] || '';
+    if (ln && !ln.value) ln.value = nameParts.slice(1).join(' ') || '';
+  }
+
+  // ============================================================
+  //  SIGNUP — 3-step
+  //  Step 1: name/email/password → sb.auth.signUp
+  //  Step 2: org details → saved to profiles
+  //  Step 3: "confirm email" screen — user clicks link in email,
+  //          then clicks the button here which calls getSession()
+  //          to check if they are now confirmed and logs them in
+  // ============================================================
   let suCurrentStep = 1;
 
   function suSetStep(n) {
@@ -1280,68 +1395,140 @@ Kathir Memorial Hospital</div>
     document.getElementById('signup-alert').className = 'auth-alert';
   }
 
-  function suNext(from) {
+  async function suNext(from) {
     if (from === 1) {
       const fn = document.getElementById('su-fn').value.trim();
       const ln = document.getElementById('su-ln').value.trim();
       const em = document.getElementById('su-email').value.trim();
       const pw = document.getElementById('su-pwd').value;
       const cp = document.getElementById('su-cpwd').value;
-      if (!fn || !ln) { showSignupAlert('Please enter your full name.', 'error'); return; }
-      if (!em || !em.includes('@')) { showSignupAlert('Please enter a valid work email.', 'error'); return; }
-      if (pw.length < 8) { showSignupAlert('Password must be at least 8 characters.', 'error'); return; }
-      if (pw !== cp) { showSignupAlert('Passwords do not match.', 'error'); return; }
+      if (!fn || !ln)            { showSignupAlert('Please enter your full name.', 'error'); return; }
+      if (!em || !em.includes('@')){ showSignupAlert('Please enter a valid work email.', 'error'); return; }
+      if (pw.length < 8)         { showSignupAlert('Password must be at least 8 characters.', 'error'); return; }
+      if (pw !== cp)             { showSignupAlert('Passwords do not match.', 'error'); return; }
+
+      showSignupAlert('Creating account...', 'success');
+
+      const { data, error } = await sb.auth.signUp({
+        email: em, password: pw,
+        options: { data: { first_name: fn, last_name: ln, full_name: fn + ' ' + ln } }
+      });
+      if (error) { showSignupAlert(error.message, 'error'); return; }
+      if (data.user) currentUser = data.user;
+
       suSetStep(2);
+
     } else if (from === 2) {
-      const org  = document.getElementById('su-org').value.trim();
-      const role = document.getElementById('su-role').value;
+      const org   = document.getElementById('su-org').value.trim();
+      const role  = document.getElementById('su-role').value;
+      const size  = document.getElementById('su-size').value;
+      const ins   = document.getElementById('su-insurers').value.trim();
       const terms = document.getElementById('su-terms').checked;
-      if (!org) { showSignupAlert('Please enter your organization name.', 'error'); return; }
-      if (!role) { showSignupAlert('Please select your role.', 'error'); return; }
+      if (!org)   { showSignupAlert('Please enter your organization name.', 'error'); return; }
+      if (!role)  { showSignupAlert('Please select your role.', 'error'); return; }
       if (!terms) { showSignupAlert('Please accept the Terms of Service.', 'error'); return; }
-      document.getElementById('su-email-display').textContent = document.getElementById('su-email').value.trim();
+
+      // Store profile data — save now if session exists, otherwise defer until after confirm
+      window._pendingProfile = {
+        first_name:   document.getElementById('su-fn').value.trim(),
+        last_name:    document.getElementById('su-ln').value.trim(),
+        organization: org, role, team_size: size, insurers: ins,
+        email:        document.getElementById('su-email').value.trim()
+      };
+
+      if (currentUser?.id) {
+        // email confirmation disabled OR Google OAuth — save immediately
+        try { await saveProfile(window._pendingProfile); window._pendingProfile = null; } catch(e) {}
+      }
+
+      document.getElementById('su-email-display').textContent =
+        document.getElementById('su-email').value.trim();
+
       suSetStep(3);
     }
   }
 
   function suPrev(from) { suSetStep(from - 1); }
 
-  function suVerify() {
-    const code = document.getElementById('su-code').value.trim();
-    if (code.length !== 6 || isNaN(code)) {
-      showSignupAlert('Please enter the 6-digit code from your email.', 'error'); return;
+  // Called when user clicks "I've confirmed my email"
+  async function suCheckConfirmed() {
+    const btn = document.getElementById('su-confirm-btn');
+    const alertEl = document.getElementById('su-confirm-alert');
+    btn.textContent = 'Checking...';
+    btn.disabled = true;
+
+    // Re-fetch session — if user clicked the email link it will now be active
+    const { data: { session }, error } = await sb.auth.getSession();
+
+    if (error || !session) {
+      // Try refreshing the session once
+      const { data: refreshed } = await sb.auth.refreshSession();
+      if (!refreshed?.session) {
+        alertEl.style.display = 'block';
+        alertEl.style.background = 'rgba(244,63,94,.1)';
+        alertEl.style.borderColor = 'rgba(244,63,94,.3)';
+        alertEl.style.color = 'var(--danger)';
+        alertEl.textContent = 'Email not confirmed yet. Please click the link in your inbox first.';
+        btn.textContent = '✅ I\'ve confirmed my email — Enter Dashboard';
+        btn.disabled = false;
+        return;
+      }
+      currentUser = refreshed.session.user;
+    } else {
+      currentUser = session.user;
     }
-    // Create account and enter app
-    currentUser = {
-      firstName: document.getElementById('su-fn').value.trim(),
-      lastName:  document.getElementById('su-ln').value.trim(),
-      role:      document.getElementById('su-role').value || 'User',
-      email:     document.getElementById('su-email').value.trim(),
-      org:       document.getElementById('su-org').value.trim()
-    };
-    sessionStorage.setItem('claimiq_user', JSON.stringify(currentUser));
-    showSignupAlert('Account created! Entering dashboard...', 'success');
-    setTimeout(() => { suSetStep(1); enterApp(); }, 1000);
+
+    // Save deferred profile now that user is confirmed
+    if (window._pendingProfile) {
+      try { await saveProfile(window._pendingProfile); window._pendingProfile = null; } catch(e) {}
+    }
+    await loadProfile();
+
+    alertEl.style.display = 'block';
+    alertEl.style.background = 'rgba(16,185,129,.1)';
+    alertEl.style.borderColor = 'rgba(16,185,129,.3)';
+    alertEl.style.color = 'var(--success)';
+    alertEl.textContent = '✅ Email confirmed! Taking you to the dashboard...';
+
+    setTimeout(() => { suSetStep(1); enterApp(); }, 900);
+  }
+
+  async function suResendEmail() {
+    const email = document.getElementById('su-email').value.trim() ||
+                  document.getElementById('su-email-display').textContent.trim();
+    if (!email) return;
+    const { error } = await sb.auth.resend({ type: 'signup', email });
+    const alertEl = document.getElementById('su-confirm-alert');
+    alertEl.style.display = 'block';
+    alertEl.textContent = error ? 'Failed to resend: ' + error.message : 'Confirmation email resent!';
   }
 
   function showSignupAlert(msg, type) {
     const el = document.getElementById('signup-alert');
-    el.textContent = msg; el.className = 'auth-alert ' + type;
+    el.textContent = msg;
+    el.className = 'auth-alert ' + type;
   }
 
-  // ===== OAUTH =====
-  function handleOAuth() { showNotif('OAuth coming soon!', 'success'); }
-
-  // ===== TOGGLE PASSWORD =====
-  function togglePwd(id, icon) {
-    const el = document.getElementById(id);
-    el.type = el.type === 'password' ? 'text' : 'password';
-    icon.textContent = el.type === 'password' ? '👁' : '🙈';
+  // ============================================================
+  //  FORGOT PASSWORD
+  // ============================================================
+  async function handleForgotPassword() {
+    const email = document.getElementById('login-email').value.trim();
+    if (!email || !email.includes('@')) {
+      showLoginAlert('Enter your email above first, then click Forgot password.', 'error'); return;
+    }
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+    if (error) { showLoginAlert(error.message, 'error'); return; }
+    showLoginAlert('Password reset email sent! Check your inbox.', 'success');
   }
 
-  // ===== PASSWORD STRENGTH =====
+  // ============================================================
+  //  PASSWORD STRENGTH
+  // ============================================================
   function checkPwdStrength() {
-    const pwd = document.getElementById('su-pwd').value;
+    const pwd  = document.getElementById('su-pwd').value;
     const bars = ['pb1','pb2','pb3','pb4'].map(id => document.getElementById(id));
     bars.forEach(b => b.className = 'pwd-bar');
     let score = 0;
@@ -1350,13 +1537,39 @@ Kathir Memorial Hospital</div>
     if (/[0-9]/.test(pwd)) score++;
     if (/[^a-zA-Z0-9]/.test(pwd)) score++;
     const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
-    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    const labels = ['','Weak','Fair','Good','Strong'];
     for (let i = 0; i < score; i++) bars[i].classList.add(cls);
     document.getElementById('pwd-label').textContent = score === 0
       ? 'Use 8+ characters with uppercase, numbers & symbols' : labels[score] + ' password';
   }
 
-  // ===== APP NAVIGATION =====
+  // ============================================================
+  //  TOGGLE PASSWORD
+  // ============================================================
+  function togglePwd(id, icon) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+    icon.textContent = el.type === 'password' ? '👁' : '🙈';
+  }
+
+  // ============================================================
+  //  UI HELPERS
+  // ============================================================
+  function showLoadingOverlay(show) {
+    let el = document.getElementById('auth-loading');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'auth-loading';
+      el.style.cssText = 'position:fixed;inset:0;background:#0b0f1a;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;';
+      el.innerHTML = '<div style="width:44px;height:44px;border-radius:50%;border:3px solid #1f2d45;border-top-color:#00d4aa;animation:spin 1s linear infinite"></div><div style="font-family:Syne,sans-serif;font-size:14px;color:#64748b">Loading ClaimIQ...</div>';
+      document.body.appendChild(el);
+    }
+    el.style.display = show ? 'flex' : 'none';
+  }
+
+  // ============================================================
+  //  APP NAVIGATION
+  // ============================================================
   function navigate(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1366,18 +1579,20 @@ Kathir Memorial Hospital</div>
     if (idx >= 0) document.querySelectorAll('.nav-item')[idx].classList.add('active');
   }
 
-  // ===== DEMO DATA =====
+  // ============================================================
+  //  DEMO DATA
+  // ============================================================
   function loadDemoPatient() {
-    document.getElementById('f-pid').value = 'PAT-1042';
-    document.getElementById('f-pname').value = 'Priya Subramaniam';
-    document.getElementById('f-dob').value = '1990-06-15';
+    document.getElementById('f-pid').value     = 'PAT-1042';
+    document.getElementById('f-pname').value   = 'Priya Subramaniam';
+    document.getElementById('f-dob').value     = '1990-06-15';
     document.getElementById('f-insurer').value = 'HDFC ERGO Health';
-    document.getElementById('f-policy').value = 'HDFC-20938472';
-    document.getElementById('f-doc').value = 'Dr. Anand Krishnan';
-    document.getElementById('f-proc').value = 'Appendectomy (CPT 44950)';
-    document.getElementById('f-icd').value = 'K37 — Unspecified appendicitis';
-    document.getElementById('f-cost').value = '180000';
-    document.getElementById('f-note').value = 'Patient Priya Subramaniam, 35F, presents with acute right lower quadrant pain radiating to the periumbilical region for the past 48 hours. CBC shows leukocytosis (WBC 13.2 × 10³). Ultrasound confirms non-compressible appendix of 9mm diameter. Conservative antibiotic management with Amoxicillin 500mg for 5 days has failed to resolve symptoms. Immediate laparoscopic appendectomy (CPT 44950) is recommended to prevent perforation and peritonitis. Diagnosis: Acute appendicitis (ICD-10: K37).';
+    document.getElementById('f-policy').value  = 'HDFC-20938472';
+    document.getElementById('f-doc').value     = 'Dr. Anand Krishnan';
+    document.getElementById('f-proc').value    = 'Appendectomy (CPT 44950)';
+    document.getElementById('f-icd').value     = 'K37 — Unspecified appendicitis';
+    document.getElementById('f-cost').value    = '180000';
+    document.getElementById('f-note').value    = 'Patient Priya Subramaniam, 35F, presents with acute right lower quadrant pain radiating to the periumbilical region for the past 48 hours. CBC shows leukocytosis (WBC 13.2 × 10³). Ultrasound confirms non-compressible appendix of 9mm diameter. Conservative antibiotic management with Amoxicillin 500mg for 5 days has failed to resolve symptoms. Immediate laparoscopic appendectomy (CPT 44950) is recommended to prevent perforation and peritonitis. Diagnosis: Acute appendicitis (ICD-10: K37).';
     showNotif('✅ Demo patient data loaded!', 'success');
   }
 
@@ -1386,7 +1601,9 @@ Kathir Memorial Hospital</div>
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   }
 
-  // ===== AGENT LOADER =====
+  // ============================================================
+  //  AGENT LOADER
+  // ============================================================
   function runAgent() {
     const pid  = document.getElementById('f-pid').value;
     const proc = document.getElementById('f-proc').value;
@@ -1408,7 +1625,9 @@ Kathir Memorial Hospital</div>
     }, steps.length * 700 + 400);
   }
 
-  // ===== NOTIFICATION =====
+  // ============================================================
+  //  NOTIFICATION
+  // ============================================================
   function showNotif(msg, type='success') {
     const n = document.getElementById('notif');
     n.className = 'notif show ' + type;
@@ -1416,7 +1635,9 @@ Kathir Memorial Hospital</div>
     setTimeout(() => n.classList.remove('show'), 3500);
   }
 
-  // ===== CLOCK =====
+  // ============================================================
+  //  CLOCK
+  // ============================================================
   function updateClock() {
     const el = document.getElementById('clock');
     if (el) el.textContent = new Date().toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
@@ -1428,11 +1649,13 @@ Kathir Memorial Hospital</div>
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       const active = document.querySelector('.screen.active');
-      if (active && active.id === 'screen-login') handleLogin();
+      if (active?.id === 'screen-login') handleLogin();
     }
   });
 
-  // ===== BOOT =====
+  // ============================================================
+  //  BOOT
+  // ============================================================
   init();
 </script>
 </body>
