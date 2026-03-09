@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs/promises");
-
 const router = express.Router();
 
 async function readMockEhr() {
@@ -12,15 +11,18 @@ async function readMockEhr() {
 
 router.get("/:patientId", async (req, res) => {
   try {
-    const ehr = await readMockEhr();
-    if (ehr?.patient_id && ehr.patient_id !== req.params.patientId) {
-      return res.status(404).json({ error: "patient not found" });
+    const db = await readMockEhr();
+    const requestedId = req.params.patientId;
+    
+    // Since your JSON is just one object, we check if the ID matches
+    if (db.patient_id === requestedId) {
+      return res.json({ success: true, data: db });
+    } else {
+      return res.status(404).json({ error: `Patient ${requestedId} not found in EHR.` });
     }
-    return res.json(ehr);
   } catch (err) {
-    return res.status(500).json({ error: err?.message || "Unknown error" });
+    return res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
 module.exports = router;
-
