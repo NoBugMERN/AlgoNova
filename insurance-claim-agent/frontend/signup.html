@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ClaimIQ — Create Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1f2d45;
+    --accent: #00d4aa;
+    --accent2: #3b82f6;
+    --danger: #f43f5e;
+    --warn: #f59e0b;
+    --success: #10b981;
+    --text: #e8edf5;
+    --muted: #64748b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:var(--bg); color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    min-height:100vh; display:flex; overflow-x:hidden;
+  }
+
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(0,212,170,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,.04) 1px, transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none; z-index:0;
+  }
+
+  .glow-orb {
+    position:fixed; border-radius:50%; filter:blur(120px);
+    pointer-events:none; z-index:0;
+  }
+  .glow-orb.teal {
+    width:500px; height:500px;
+    background:rgba(0,212,170,.07);
+    top:-100px; right:-100px;
+  }
+  .glow-orb.blue {
+    width:400px; height:400px;
+    background:rgba(59,130,246,.05);
+    bottom:-80px; left:-80px;
+  }
+
+  .auth-layout {
+    display:flex; width:100%; min-height:100vh; position:relative; z-index:1;
+  }
+
+  /* LEFT — FORM PANEL */
+  .panel-form {
+    width:500px; flex-shrink:0; display:flex; flex-direction:column;
+    justify-content:center; padding:48px 52px;
+    border-right:1px solid var(--border); min-height:100vh;
+  }
+
+  .brand { display:flex; align-items:center; gap:12px; margin-bottom:40px; }
+  .brand-icon {
+    width:40px; height:40px; background:var(--accent);
+    border-radius:11px; display:flex; align-items:center;
+    justify-content:center; font-size:20px; flex-shrink:0;
+  }
+  .brand-name {
+    font-family:'Syne',sans-serif; font-size:22px;
+    font-weight:800; letter-spacing:-0.5px;
+  }
+  .brand-tag {
+    font-size:10px; color:var(--muted);
+    letter-spacing:1.5px; text-transform:uppercase; margin-top:2px;
+  }
+
+  .auth-header { margin-bottom:28px; }
+  .auth-title {
+    font-family:'Syne',sans-serif; font-size:26px; font-weight:800;
+    letter-spacing:-0.5px; margin-bottom:6px;
+  }
+  .auth-sub { font-size:13px; color:var(--muted); }
+  .auth-sub a { color:var(--accent); text-decoration:none; font-weight:500; }
+  .auth-sub a:hover { text-decoration:underline; }
+
+  /* STEP INDICATOR */
+  .steps {
+    display:flex; align-items:center; gap:0; margin-bottom:32px;
+  }
+  .step {
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+  }
+  .step-circle {
+    width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; font-family:'Syne',sans-serif;
+    transition:all .3s;
+    border:2px solid var(--border); color:var(--muted); background:transparent;
+  }
+  .step.active .step-circle {
+    background:var(--accent); border-color:var(--accent); color:#0b0f1a;
+  }
+  .step.done .step-circle {
+    background:rgba(0,212,170,.15); border-color:var(--accent); color:var(--accent);
+  }
+  .step-label { font-size:12px; color:var(--muted); font-weight:500; }
+  .step.active .step-label { color:var(--text); }
+  .step.done .step-label { color:var(--accent); }
+  .step-line { flex:1; height:1px; background:var(--border); margin:0 10px; }
+  .step-line.done { background:var(--accent); }
+
+  /* FORM */
+  .form-step { display:none; animation:fadeIn .3s ease; }
+  .form-step.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:translateX(0)} }
+
+  .form-group { margin-bottom:16px; }
+  .form-label {
+    display:block; font-size:12px; font-weight:500;
+    color:var(--muted); letter-spacing:.3px;
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .form-control {
+    width:100%; padding:12px 16px;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:14px; transition:all .2s; outline:none;
+  }
+  .form-control:focus {
+    border-color:var(--accent); background:rgba(0,212,170,.04);
+    box-shadow:0 0 0 3px rgba(0,212,170,.1);
+  }
+  .form-control::placeholder { color:var(--muted); }
+  .form-control.error { border-color:var(--danger); }
+
+  .form-row { display:flex; gap:12px; }
+  .form-row .form-group { flex:1; }
+
+  .input-wrapper { position:relative; }
+  .input-icon {
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    color:var(--muted); font-size:16px; cursor:pointer; user-select:none;
+    transition:color .2s;
+  }
+  .input-icon:hover { color:var(--text); }
+  .input-wrapper .form-control { padding-right:44px; }
+
+  /* PASSWORD STRENGTH */
+  .pwd-strength { margin-top:8px; }
+  .pwd-bars {
+    display:flex; gap:4px; margin-bottom:5px;
+  }
+  .pwd-bar {
+    height:3px; flex:1; border-radius:2px;
+    background:var(--border); transition:background .3s;
+  }
+  .pwd-bar.weak { background:var(--danger); }
+  .pwd-bar.fair { background:var(--warn); }
+  .pwd-bar.strong { background:var(--success); }
+  .pwd-label { font-size:11px; color:var(--muted); }
+
+  /* SELECT */
+  select.form-control {
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center;
+    padding-right:36px; cursor:pointer;
+  }
+  select.form-control option { background:var(--surface); }
+
+  /* TERMS */
+  .terms-row {
+    display:flex; align-items:flex-start; gap:10px;
+    margin-bottom:20px; margin-top:4px;
+  }
+  .checkbox-label {
+    display:flex; align-items:flex-start; gap:8px;
+    font-size:13px; color:var(--muted); cursor:pointer; line-height:1.5;
+  }
+  .checkbox-label input[type="checkbox"] { display:none; }
+  .checkbox-custom {
+    width:16px; height:16px; border-radius:4px; margin-top:2px;
+    border:1px solid var(--border); background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s; flex-shrink:0;
+  }
+  .checkbox-label input:checked + .checkbox-custom {
+    background:var(--accent); border-color:var(--accent);
+  }
+  .checkbox-label input:checked + .checkbox-custom::after {
+    content:'✓'; font-size:10px; color:#0b0f1a; font-weight:700;
+  }
+  .terms-row a { color:var(--accent); text-decoration:none; }
+  .terms-row a:hover { text-decoration:underline; }
+
+  /* BUTTONS */
+  .btn-group { display:flex; gap:10px; margin-top:4px; }
+  .btn-block {
+    flex:1; padding:13px 20px; border-radius:10px;
+    font-family:'Syne',sans-serif; font-size:14px; font-weight:700;
+    letter-spacing:.3px; cursor:pointer; border:none;
+    transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-primary-full {
+    background:var(--accent); color:#0b0f1a;
+  }
+  .btn-primary-full:hover {
+    background:#00b894; transform:translateY(-1px);
+    box-shadow:0 8px 24px rgba(0,212,170,.25);
+  }
+  .btn-secondary-full {
+    background:var(--surface); color:var(--text);
+    border:1px solid var(--border);
+  }
+  .btn-secondary-full:hover { background:var(--surface2); }
+
+  /* ALERT */
+  .alert {
+    padding:12px 14px; border-radius:9px;
+    font-size:13px; margin-bottom:16px;
+    display:none; align-items:center; gap:8px;
+  }
+  .alert.error { background:rgba(244,63,94,.1); border:1px solid rgba(244,63,94,.3); color:var(--danger); display:flex; }
+  .alert.success { background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.3); color:var(--success); display:flex; }
+
+  /* DIVIDER */
+  .divider {
+    display:flex; align-items:center; gap:12px;
+    margin:20px 0; color:var(--muted); font-size:12px;
+  }
+  .divider::before, .divider::after {
+    content:''; flex:1; height:1px; background:var(--border);
+  }
+
+  .btn-oauth {
+    width:100%; padding:11px 20px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:13px; font-weight:500; cursor:pointer;
+    transition:all .2s; display:flex; align-items:center;
+    justify-content:center; gap:10px; margin-bottom:10px;
+  }
+  .btn-oauth:hover { background:var(--surface2); border-color:var(--muted); }
+
+  /* RIGHT PANEL */
+  .panel-right {
+    flex:1; display:flex; flex-direction:column; justify-content:center;
+    padding:60px 56px; position:relative; overflow:hidden;
+  }
+  .panel-right::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg, rgba(0,212,170,.02) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .testimonial-section { position:relative; z-index:1; }
+  .section-eyebrow {
+    font-size:11px; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--accent); font-weight:600; margin-bottom:28px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-eyebrow::before {
+    content:''; width:24px; height:2px; background:var(--accent);
+  }
+
+  .metrics-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:40px; }
+  .metric-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; padding:22px; position:relative; overflow:hidden;
+  }
+  .metric-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  }
+  .metric-card.teal::before { background:var(--accent); }
+  .metric-card.blue::before { background:var(--accent2); }
+  .metric-card.green::before { background:var(--success); }
+  .metric-card.red::before { background:var(--danger); }
+  .metric-num {
+    font-family:'Syne',sans-serif; font-size:30px;
+    font-weight:800; letter-spacing:-1px; margin-bottom:4px;
+  }
+  .metric-num.teal { color:var(--accent); }
+  .metric-num.blue { color:var(--accent2); }
+  .metric-num.green { color:var(--success); }
+  .metric-num.red { color:var(--danger); }
+  .metric-label { font-size:12px; color:var(--muted); }
+
+  .testimonial {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; padding:24px;
+  }
+  .testimonial-quote {
+    font-size:14px; line-height:1.7; color:var(--text);
+    margin-bottom:18px; font-style:italic;
+  }
+  .testimonial-quote::before { content:'"'; color:var(--accent); font-size:20px; font-style:normal; }
+  .testimonial-author {
+    display:flex; align-items:center; gap:12px;
+  }
+  .author-avatar {
+    width:38px; height:38px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; color:#0b0f1a;
+    font-family:'Syne',sans-serif;
+  }
+  .author-name { font-size:13px; font-weight:500; }
+  .author-role { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .auth-card { animation:slideUp .4s ease forwards; }
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(16px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* SUCCESS STATE */
+  .success-state {
+    text-align:center; padding:20px 0; display:none;
+    animation:fadeIn .4s ease;
+  }
+  .success-icon {
+    width:64px; height:64px; background:rgba(16,185,129,.15);
+    border:2px solid rgba(16,185,129,.3); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; margin:0 auto 20px;
+  }
+  .success-title {
+    font-family:'Syne',sans-serif; font-size:22px;
+    font-weight:800; margin-bottom:8px;
+  }
+  .success-sub { font-size:13px; color:var(--muted); margin-bottom:28px; line-height:1.6; }
+
+  @media(max-width:900px) {
+    .panel-right { display:none; }
+    .panel-form { width:100%; border-right:none; }
+  }
+</style>
+</head>
+<body>
+<div class="glow-orb teal"></div>
+<div class="glow-orb blue"></div>
+
+<div class="auth-layout">
+
+  <!-- LEFT — FORM -->
+  <div class="panel-form">
+    <div class="brand">
+      <div class="brand-icon">⚕</div>
+      <div>
+        <div class="brand-name">ClaimIQ</div>
+        <div class="brand-tag">Insurance Claim Optimization</div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-title">Create your account</div>
+        <div class="auth-sub">
+          Already have an account? <a href="login.html">Sign in</a>
+        </div>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div class="steps" id="stepIndicator">
+        <div class="step active" id="step1-ind">
+          <div class="step-circle">1</div>
+          <div class="step-label">Account</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step" id="step2-ind">
+          <div class="step-circle">2</div>
+          <div class="step-label">Organization</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step" id="step3-ind">
+          <div class="step-circle">3</div>
+          <div class="step-label">Verify</div>
+        </div>
+      </div>
+
+      <div class="alert" id="alertBox"></div>
+
+      <!-- STEP 1: ACCOUNT INFO -->
+      <div class="form-step active" id="formStep1">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Priya"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Subramaniam"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Work Email</label>
+          <input type="email" class="form-control" id="email" placeholder="priya@hospital.com"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrapper">
+            <input type="password" class="form-control" id="password" placeholder="Create a strong password" oninput="checkPassword()" autocomplete="new-password"/>
+            <span class="input-icon" id="togglePwd" onclick="togglePassword('password','togglePwd')">👁</span>
+          </div>
+          <div class="pwd-strength">
+            <div class="pwd-bars">
+              <div class="pwd-bar" id="bar1"></div>
+              <div class="pwd-bar" id="bar2"></div>
+              <div class="pwd-bar" id="bar3"></div>
+              <div class="pwd-bar" id="bar4"></div>
+            </div>
+            <div class="pwd-label" id="pwdLabel">Use 8+ characters with uppercase, numbers & symbols</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-wrapper">
+            <input type="password" class="form-control" id="confirmPwd" placeholder="Repeat password" autocomplete="new-password"/>
+            <span class="input-icon" id="toggleConfirm" onclick="togglePassword('confirmPwd','toggleConfirm')">👁</span>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-block btn-primary-full" onclick="nextStep(1)">
+            Continue →
+          </button>
+        </div>
+
+        <div class="divider">or sign up with</div>
+
+        <button class="btn-oauth" onclick="handleOAuth('Google')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <!-- STEP 2: ORGANIZATION -->
+      <div class="form-step" id="formStep2">
+        <div class="form-group">
+          <label class="form-label">Hospital / Organization Name</label>
+          <input type="text" class="form-control" id="orgName" placeholder="Kathir Memorial Hospital"/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Role</label>
+            <select class="form-control" id="role">
+              <option value="">Select role...</option>
+              <option>Revenue Cycle Manager</option>
+              <option>Billing Administrator</option>
+              <option>Medical Coder</option>
+              <option>Hospital Administrator</option>
+              <option>Surgeon / Physician</option>
+              <option>Insurance Coordinator</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Team Size</label>
+            <select class="form-control" id="teamSize">
+              <option value="">Select size...</option>
+              <option>1–5</option>
+              <option>6–20</option>
+              <option>21–50</option>
+              <option>50–200</option>
+              <option>200+</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Insurer(s) You Work With</label>
+          <input type="text" class="form-control" id="insurers" placeholder="e.g. Star Health, HDFC ERGO, Bajaj Allianz"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">How did you hear about ClaimIQ?</label>
+          <select class="form-control" id="referral">
+            <option value="">Select...</option>
+            <option>Colleague recommendation</option>
+            <option>Conference / Event</option>
+            <option>Online search</option>
+            <option>LinkedIn</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="terms-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="terms"/>
+            <span class="checkbox-custom"></span>
+            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I understand that ClaimIQ processes protected health information under applicable regulations.</span>
+          </label>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-block btn-secondary-full" onclick="prevStep(2)">← Back</button>
+          <button class="btn-block btn-primary-full" onclick="nextStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: VERIFY / CONFIRM -->
+      <div class="form-step" id="formStep3">
+        <div style="text-align:center; padding:16px 0 28px;">
+          <div style="font-size:48px; margin-bottom:16px;">📬</div>
+          <div style="font-family:'Syne',sans-serif; font-size:18px; font-weight:800; margin-bottom:8px;">Check your inbox</div>
+          <div style="font-size:13px; color:var(--muted); line-height:1.7; max-width:320px; margin:0 auto 28px;">
+            We've sent a 6-digit verification code to<br>
+            <strong id="emailDisplay" style="color:var(--text)"></strong>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Verification Code</label>
+          <input type="text" class="form-control" id="verifyCode"
+            placeholder="000000" maxlength="6"
+            style="font-family:'Syne',sans-serif; font-size:24px; font-weight:700; letter-spacing:8px; text-align:center;"
+          />
+        </div>
+
+        <div style="text-align:center; margin-bottom:20px;">
+          <span style="font-size:13px; color:var(--muted);">Didn't receive it? </span>
+          <a href="#" onclick="showAlert('Code resent!','success'); return false;"
+            style="font-size:13px; color:var(--accent); text-decoration:none; font-weight:500;">Resend code</a>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-block btn-secondary-full" onclick="prevStep(3)">← Back</button>
+          <button class="btn-block btn-primary-full" onclick="verifyAndCreate()">
+            Create Account ✓
+          </button>
+        </div>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Account Created!</div>
+        <div class="success-sub">
+          Welcome to ClaimIQ. Your workspace is being set up.<br>
+          Redirecting you to your dashboard...
+        </div>
+        <button class="btn-block btn-primary-full" onclick="window.location.href='index.html'" style="max-width:240px;margin:0 auto;">
+          Go to Dashboard →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT — SOCIAL PROOF -->
+  <div class="panel-right">
+    <div class="testimonial-section">
+      <div class="section-eyebrow">Trusted by revenue teams</div>
+
+      <div class="metrics-grid">
+        <div class="metric-card teal">
+          <div class="metric-num teal">94%</div>
+          <div class="metric-label">Approval rate improvement</div>
+        </div>
+        <div class="metric-card blue">
+          <div class="metric-num blue">50+</div>
+          <div class="metric-label">Insurers supported</div>
+        </div>
+        <div class="metric-card green">
+          <div class="metric-num green">₹2.4Cr</div>
+          <div class="metric-label">Average annual savings</div>
+        </div>
+        <div class="metric-card red" style="--danger: #f59e0b">
+          <div class="metric-num" style="color:var(--warn)">3 min</div>
+          <div class="metric-label">Avg. pre-auth package time</div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="testimonial-quote">
+          ClaimIQ has transformed our billing department. We went from 60% rejection
+          to 94% first-pass approval in under 3 months. The gap analysis alone saved
+          us from countless denials.
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">AK</div>
+          <div>
+            <div class="author-name">Dr. Anand Krishnan</div>
+            <div class="author-role">Head of Revenue Cycle — Kathir Memorial Hospital</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentStep = 1;
+
+  function setStep(n) {
+    // Hide all steps
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('formStep' + n).classList.add('active');
+
+    // Update indicators
+    for (let i = 1; i <= 3; i++) {
+      const ind = document.getElementById('step' + i + '-ind');
+      ind.classList.remove('active', 'done');
+      if (i < n) ind.classList.add('done');
+      if (i === n) ind.classList.add('active');
+    }
+    // Update lines
+    for (let i = 1; i <= 2; i++) {
+      const line = document.getElementById('line' + i);
+      line.classList.toggle('done', i < n);
+    }
+
+    currentStep = n;
+    document.getElementById('alertBox').className = 'alert';
+  }
+
+  function validateStep1() {
+    const fn = document.getElementById('firstName').value.trim();
+    const ln = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const pwd = document.getElementById('password').value;
+    const cpwd = document.getElementById('confirmPwd').value;
+
+    if (!fn || !ln) { showAlert('Please enter your full name.', 'error'); return false; }
+    if (!email || !email.includes('@')) { showAlert('Please enter a valid work email.', 'error'); return false; }
+    if (pwd.length < 8) { showAlert('Password must be at least 8 characters.', 'error'); return false; }
+    if (pwd !== cpwd) { showAlert('Passwords do not match.', 'error'); return false; }
+    return true;
+  }
+
+  function validateStep2() {
+    const org = document.getElementById('orgName').value.trim();
+    const role = document.getElementById('role').value;
+    const terms = document.getElementById('terms').checked;
+
+    if (!org) { showAlert('Please enter your organization name.', 'error'); return false; }
+    if (!role) { showAlert('Please select your role.', 'error'); return false; }
+    if (!terms) { showAlert('Please accept the Terms of Service to continue.', 'error'); return false; }
+    return true;
+  }
+
+  function nextStep(from) {
+    if (from === 1 && !validateStep1()) return;
+    if (from === 2 && !validateStep2()) return;
+
+    if (from === 1) {
+      setStep(2);
+    } else if (from === 2) {
+      document.getElementById('emailDisplay').textContent = document.getElementById('email').value.trim();
+      setStep(3);
+    }
+  }
+
+  function prevStep(from) {
+    setStep(from - 1);
+  }
+
+  function verifyAndCreate() {
+    const code = document.getElementById('verifyCode').value.trim();
+    if (code.length !== 6 || isNaN(code)) {
+      showAlert('Please enter the 6-digit code from your email.', 'error');
+      return;
+    }
+    // Simulate verification
+    document.getElementById('formStep3').style.display = 'none';
+    document.getElementById('stepIndicator').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+    setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+  }
+
+  function checkPassword() {
+    const pwd = document.getElementById('password').value;
+    const bars = [document.getElementById('bar1'), document.getElementById('bar2'),
+                  document.getElementById('bar3'), document.getElementById('bar4')];
+    const label = document.getElementById('pwdLabel');
+
+    bars.forEach(b => { b.className = 'pwd-bar'; });
+
+    let score = 0;
+    if (pwd.length >= 8) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+
+    const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    const colors = ['', 'weak', 'fair', 'strong', 'strong'];
+
+    for (let i = 0; i < score; i++) bars[i].classList.add(colors[score]);
+    label.textContent = score === 0 ? 'Use 8+ characters with uppercase, numbers & symbols' : labels[score] + ' password';
+  }
+
+  function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    icon.textContent = input.type === 'password' ? '👁' : '🙈';
+  }
+
+  function showAlert(msg, type) {
+    const box = document.getElementById('alertBox');
+    box.textContent = msg;
+    box.className = 'alert ' + type;
+  }
+
+  function handleOAuth(provider) {
+    showAlert('Redirecting to ' + provider + '...', 'success');
+  }
+</script>
+</body>
+</html>
