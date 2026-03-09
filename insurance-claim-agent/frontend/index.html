@@ -1157,6 +1157,135 @@ tr:hover td { background: var(--surface2); }
   letter-spacing: .7px; text-transform: uppercase;
   color: var(--muted); margin-bottom: 7px; display: block;
 }
+
+/* New claim wizard (multi-step) */
+.nc-shell {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.nc-stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #020617, #0b1120);
+  box-shadow: var(--shadow-lg);
+}
+.nc-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+.nc-step-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface2);
+  color: var(--muted);
+  transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
+}
+.nc-step-label {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: .8;
+  transition: color var(--transition), opacity var(--transition), transform var(--transition);
+}
+.nc-step-divider {
+  flex: 1;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to right, rgba(148,163,184,.35), rgba(30,64,175,.15));
+}
+.nc-step.active .nc-step-icon {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border-color: rgba(56,189,248,.9);
+  color: #ecfeff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(56,189,248,.5), 0 14px 30px rgba(15,23,42,.8);
+}
+.nc-step.completed .nc-step-icon {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-color: rgba(34,197,94,.9);
+  color: #ecfdf5;
+  box-shadow: 0 0 0 1px rgba(34,197,94,.4), 0 14px 30px rgba(22,163,74,.8);
+}
+.nc-step.active .nc-step-label {
+  color: #e5e7eb;
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.nc-step.completed .nc-step-label {
+  color: #bbf7d0;
+  opacity: .9;
+}
+
+.nc-card {
+  margin-top: 6px;
+}
+.nc-card .card-body {
+  padding: 24px 26px;
+}
+.nc-card:not(.active) {
+  display: none;
+}
+.nc-card.active {
+  display: block;
+  animation: ncStepIn var(--transition-slow);
+}
+
+@keyframes ncStepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nc-section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.nc-section-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.nc-nav {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nc-nav-right {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 960px) {
+  .nc-step-label { display: none; }
+  .nc-stepper { border-radius: 16px; }
+  .nc-nav { flex-direction: column-reverse; align-items: stretch; }
+  .nc-nav-right { justify-content: flex-end; }
+}
+
 input.fi, select.fi, textarea.fi {
   width: 100%;
   padding: 11px 14px;
@@ -1764,92 +1893,185 @@ select.fi option { background: var(--surface); }
         <div>
           <div class="breadcrumb">Dashboard <span class="bc-arrow">›</span> New Claim</div>
           <div class="page-title">New Pre-Authorization Request</div>
-          <div class="page-sub">Structured intake for surgical claims — fill manually or load sample data</div>
+          <div class="page-sub">Smooth, guided intake — from patient details to certification &amp; risk.</div>
         </div>
         <button class="demo-btn" onclick="loadDemoPatient()">🎯 Load Sample Case</button>
       </div>
 
-      <div class="card">
-        <div class="card-head"><div class="card-title">Patient, Diagnosis &amp; Procedure</div></div>
-        <div class="card-body" style="padding:26px">
-          <div class="fgrid">
-            <div><label class="fg-lbl">Patient ID</label><input type="text" class="fi" id="f-pid" placeholder="e.g. PAT-1042"/></div>
-            <div><label class="fg-lbl">Patient Name</label><input type="text" class="fi" id="f-pname" placeholder="Full name"/></div>
-            <div><label class="fg-lbl">Date of Birth</label><input type="date" class="fi" id="f-dob"/></div>
-            <div><label class="fg-lbl">Gender</label><select class="fi" id="f-gender"><option value="">Select gender...</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-            <div><label class="fg-lbl">Insurance Provider</label><select class="fi" id="f-insurer"><option value="">Select insurer...</option><option>Star Health Insurance</option><option>HDFC ERGO Health</option><option>Bajaj Allianz Health</option><option>Niva Bupa Health</option><option>Care Health Insurance</option></select></div>
-            <div><label class="fg-lbl">Policy Number</label><input type="text" class="fi" id="f-policy" placeholder="e.g. STAR-0029481"/></div>
-            <div><label class="fg-lbl">Treating Doctor</label><input type="text" class="fi" id="f-doc" placeholder="Dr. Name"/></div>
-            <div class="fg-full"><label class="fg-lbl">Diagnosis Description</label><input type="text" class="fi" id="f-diagnosis-desc" placeholder="e.g. Lumbar Disc Herniation"/></div>
-            <div><label class="fg-lbl">ICD-10 Code</label><input type="text" class="fi" id="f-icd" placeholder="e.g. M51.1"/></div>
-            <div><label class="fg-lbl">Diagnosis Date</label><input type="date" class="fi" id="f-diagnosis-date"/></div>
-            <div class="fg-full"><label class="fg-lbl">Clinical Notes</label><textarea class="fi" id="f-diagnosis-notes" rows="3" placeholder="Key clinical findings..."></textarea></div>
-            <div><label class="fg-lbl">Planned Procedure</label><select class="fi" id="f-proc"><option value="">Select procedure...</option><option>Knee Replacement (CPT 27447)</option><option>Appendectomy (CPT 44950)</option><option>Cardiac Stenting (CPT 92928)</option><option>Cholecystectomy (CPT 47562)</option><option>Spinal Fusion (CPT 22612)</option><option>Hip Replacement (CPT 27130)</option></select></div>
-            <div><label class="fg-lbl">Surgery Date</label><input type="date" class="fi" id="f-sdate"/></div>
-            <div class="fg-full"><label class="fg-lbl">Hospital Name</label><input type="text" class="fi" id="f-hospital" placeholder="e.g. Apollo Hospital"/></div>
-            <div class="fg-full"><label class="fg-lbl">Surgeon's Recommendation Note</label><textarea class="fi" id="f-note" rows="5" placeholder="Paste the surgeon's note here..."></textarea></div>
-            <div><label class="fg-lbl">Estimated Cost (₹)</label><input type="number" class="fi" id="f-cost" placeholder="e.g. 450000"/></div>
+      <div class="nc-shell">
+        <div class="nc-stepper">
+          <div class="nc-step active" data-step="patient" onclick="goToClaimStep('patient')">
+            <div class="nc-step-icon">1</div>
+            <div class="nc-step-label">Patient</div>
+          </div>
+          <div class="nc-step-divider"></div>
+          <div class="nc-step" data-step="diagnosis" onclick="goToClaimStep('diagnosis')">
+            <div class="nc-step-icon">2</div>
+            <div class="nc-step-label">Diagnosis</div>
+          </div>
+          <div class="nc-step-divider"></div>
+          <div class="nc-step" data-step="procedure" onclick="goToClaimStep('procedure')">
+            <div class="nc-step-icon">3</div>
+            <div class="nc-step-label">Procedure</div>
+          </div>
+          <div class="nc-step-divider"></div>
+          <div class="nc-step" data-step="documents" onclick="goToClaimStep('documents')">
+            <div class="nc-step-icon">4</div>
+            <div class="nc-step-label">Documents</div>
+          </div>
+          <div class="nc-step-divider"></div>
+          <div class="nc-step" data-step="history" onclick="goToClaimStep('history')">
+            <div class="nc-step-icon">5</div>
+            <div class="nc-step-label">History</div>
+          </div>
+          <div class="nc-step-divider"></div>
+          <div class="nc-step" data-step="cert" onclick="goToClaimStep('cert')">
+            <div class="nc-step-icon">6</div>
+            <div class="nc-step-label">Certification &amp; Risk</div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="card-head"><div class="card-title">Documents, History, Certification &amp; Risk</div></div>
-        <div class="card-body" style="padding:26px">
-          <div class="sec-title">Supporting Documents Upload</div>
-          <div class="fgrid">
-            <div class="fg-full"><label class="fg-lbl">Imaging (MRI / X-Ray / Ultrasound)</label><input type="file" class="fi" id="f-doc-imaging" multiple/></div>
-            <div class="fg-full"><label class="fg-lbl">Doctor Recommendation Letter</label><input type="file" class="fi" id="f-doc-reco" multiple/></div>
-            <div class="fg-full"><label class="fg-lbl">Treatment History Records</label><input type="file" class="fi" id="f-doc-history" multiple/></div>
-            <div class="fg-full"><label class="fg-lbl">Lab Reports / Medical Certificates</label><input type="file" class="fi" id="f-doc-labs" multiple/></div>
+        <!-- Patient -->
+        <div class="card nc-card active" id="nc-card-patient">
+          <div class="card-head"><div class="card-title">Patient Details</div></div>
+          <div class="card-body">
+            <div class="nc-section-title">Patient profile</div>
+            <div class="nc-section-sub">Start with the core demographics and coverage details.</div>
+            <div class="fgrid">
+              <div><label class="fg-lbl">Patient ID</label><input type="text" class="fi" id="f-pid" placeholder="e.g. PAT-1042"/></div>
+              <div><label class="fg-lbl">Patient Name</label><input type="text" class="fi" id="f-pname" placeholder="Full name"/></div>
+              <div><label class="fg-lbl">Date of Birth</label><input type="date" class="fi" id="f-dob"/></div>
+              <div><label class="fg-lbl">Gender</label><select class="fi" id="f-gender"><option value="">Select gender...</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+              <div><label class="fg-lbl">Insurance Provider</label><select class="fi" id="f-insurer"><option value="">Select insurer...</option><option>Star Health Insurance</option><option>HDFC ERGO Health</option><option>Bajaj Allianz Health</option><option>Niva Bupa Health</option><option>Care Health Insurance</option></select></div>
+              <div><label class="fg-lbl">Policy Number</label><input type="text" class="fi" id="f-policy" placeholder="e.g. STAR-0029481"/></div>
+              <div><label class="fg-lbl">Treating Doctor</label><input type="text" class="fi" id="f-doc" placeholder="Dr. Name"/></div>
+              <div><label class="fg-lbl">Hospital Name</label><input type="text" class="fi" id="f-hospital" placeholder="e.g. Apollo Hospital"/></div>
+            </div>
+            <div class="nc-nav">
+              <button class="btn btn-w" type="button" onclick="resetForm()">Reset Form</button>
+              <div class="nc-nav-right">
+                <button class="btn btn-g" type="button" onclick="nextClaimStep()">Next: Diagnosis</button>
+              </div>
+            </div>
           </div>
-          <div class="hr"></div>
-          <div class="sec-title">Treatment History</div>
-          <div class="fgrid">
-            <div><label class="fg-lbl">Previous Treatments</label><textarea class="fi" id="f-prev-treatments" rows="3" placeholder="e.g. Physiotherapy, analgesics..."></textarea></div>
-            <div><label class="fg-lbl">Treatment Duration</label><input type="text" class="fi" id="f-treat-duration" placeholder="e.g. 6 weeks"/></div>
-            <div class="fg-full"><label class="fg-lbl">Outcome</label><textarea class="fi" id="f-treat-outcome" rows="3" placeholder="e.g. Partial relief..."></textarea></div>
+        </div>
+
+        <!-- Diagnosis -->
+        <div class="card nc-card" id="nc-card-diagnosis">
+          <div class="card-head"><div class="card-title">Diagnosis</div></div>
+          <div class="card-body">
+            <div class="nc-section-title">Clinical picture</div>
+            <div class="nc-section-sub">Capture primary and secondary diagnoses with ICD codes.</div>
+            <div class="fgrid">
+              <div class="fg-full"><label class="fg-lbl">Diagnosis Description</label><input type="text" class="fi" id="f-diagnosis-desc" placeholder="e.g. Lumbar Disc Herniation"/></div>
+              <div><label class="fg-lbl">ICD-10 Code</label><input type="text" class="fi" id="f-icd" placeholder="e.g. M51.1"/></div>
+              <div><label class="fg-lbl">Diagnosis Date</label><input type="date" class="fi" id="f-diagnosis-date"/></div>
+              <div class="fg-full"><label class="fg-lbl">Clinical Notes</label><textarea class="fi" id="f-diagnosis-notes" rows="3" placeholder="Key clinical findings..."></textarea></div>
+            </div>
+            <div class="nc-nav">
+              <button class="btn btn-w" type="button" onclick="prevClaimStep()">Back: Patient</button>
+              <div class="nc-nav-right">
+                <button class="btn btn-g" type="button" onclick="nextClaimStep()">Next: Procedure</button>
+              </div>
+            </div>
           </div>
-          <div class="hr"></div>
-          <div class="sec-title">Lab Reports</div>
-          <div class="fgrid">
-            <div><label class="fg-lbl">Primary Report Type</label><select class="fi" id="f-lab-type"><option value="">Select type...</option><option>MRI</option><option>X-Ray</option><option>CBC</option><option>LFT</option><option>Pain scale</option><option>Other</option></select></div>
-            <div><label class="fg-lbl">Report Date</label><input type="date" class="fi" id="f-lab-date"/></div>
-            <div class="fg-full"><label class="fg-lbl">Key Findings</label><textarea class="fi" id="f-lab-findings" rows="3" placeholder="e.g. MRI Lumbar Spine..."></textarea></div>
+        </div>
+
+        <!-- Procedure -->
+        <div class="card nc-card" id="nc-card-procedure">
+          <div class="card-head"><div class="card-title">Procedure</div></div>
+          <div class="card-body">
+            <div class="nc-section-title">Planned intervention</div>
+            <div class="nc-section-sub">Describe the requested procedure and financials.</div>
+            <div class="fgrid">
+              <div><label class="fg-lbl">Planned Procedure</label><select class="fi" id="f-proc"><option value="">Select procedure...</option><option>Knee Replacement (CPT 27447)</option><option>Appendectomy (CPT 44950)</option><option>Cardiac Stenting (CPT 92928)</option><option>Cholecystectomy (CPT 47562)</option><option>Spinal Fusion (CPT 22612)</option><option>Hip Replacement (CPT 27130)</option></select></div>
+              <div><label class="fg-lbl">Surgery Date</label><input type="date" class="fi" id="f-sdate"/></div>
+              <div><label class="fg-lbl">Estimated Cost (₹)</label><input type="number" class="fi" id="f-cost" placeholder="e.g. 450000"/></div>
+              <div class="fg-full"><label class="fg-lbl">Surgeon's Recommendation Note</label><textarea class="fi" id="f-note" rows="4" placeholder="Paste the surgeon's note here..."></textarea></div>
+            </div>
+            <div class="nc-nav">
+              <button class="btn btn-w" type="button" onclick="prevClaimStep()">Back: Diagnosis</button>
+              <div class="nc-nav-right">
+                <button class="btn btn-g" type="button" onclick="nextClaimStep()">Next: Documents</button>
+              </div>
+            </div>
           </div>
-          <div class="hr"></div>
-          <div class="sec-title">Doctor Certification</div>
-          <div class="fgrid">
-            <div><label class="fg-lbl">Surgeon Name</label><input type="text" class="fi" id="f-cert-surgeon" placeholder="e.g. Dr. Sharma"/></div>
-            <div><label class="fg-lbl">Medical License ID</label><input type="text" class="fi" id="f-license" placeholder="e.g. TN-XXXX"/></div>
-            <div><label class="fg-lbl">Signed Recommendation Letter</label><input type="file" class="fi" id="f-cert-letter"/></div>
-            <div><label class="fg-lbl">Medical Necessity Certificate</label><input type="file" class="fi" id="f-cert-necessity"/></div>
-            <div class="fg-full"><label class="fg-lbl">Certification Notes</label><textarea class="fi" id="f-cert-notes" rows="3" placeholder="Surgeon justification..."></textarea></div>
+        </div>
+
+        <!-- Documents -->
+        <div class="card nc-card" id="nc-card-documents">
+          <div class="card-head"><div class="card-title">Documents</div></div>
+          <div class="card-body">
+            <div class="nc-section-title">Supporting documents upload</div>
+            <div class="nc-section-sub">Attach imaging, letters, and lab evidence that support this claim.</div>
+            <div class="fgrid">
+              <div class="fg-full"><label class="fg-lbl">Imaging (MRI / X-Ray / Ultrasound)</label><input type="file" class="fi" id="f-doc-imaging" multiple/></div>
+              <div class="fg-full"><label class="fg-lbl">Doctor Recommendation Letter</label><input type="file" class="fi" id="f-doc-reco" multiple/></div>
+              <div class="fg-full"><label class="fg-lbl">Treatment History Records</label><input type="file" class="fi" id="f-doc-history" multiple/></div>
+              <div class="fg-full"><label class="fg-lbl">Lab Reports / Medical Certificates</label><input type="file" class="fi" id="f-doc-labs" multiple/></div>
+            </div>
+            <div class="nc-nav">
+              <button class="btn btn-w" type="button" onclick="prevClaimStep()">Back: Procedure</button>
+              <div class="nc-nav-right">
+                <button class="btn btn-g" type="button" onclick="nextClaimStep()">Next: History</button>
+              </div>
+            </div>
           </div>
-          <div class="hr"></div>
-          <div class="sec-title">Claim Details</div>
-          <div class="fgrid">
-            <div><label class="fg-lbl">Claim ID</label><input type="text" class="fi" id="f-claim-id" placeholder="e.g. CLM_011"/></div>
-            <div><label class="fg-lbl">Claim Submission Date</label><input type="date" class="fi" id="f-claim-date"/></div>
-            <div><label class="fg-lbl">Requested Amount (₹)</label><input type="number" class="fi" id="f-requested-amount" placeholder="e.g. 175000"/></div>
-            <div><label class="fg-lbl">Procedure Cost Estimate (₹)</label><input type="number" class="fi" id="f-proc-cost-est" placeholder="e.g. 175000"/></div>
-            <div class="fg-full"><label class="fg-lbl">Internal Claim Notes</label><textarea class="fi" id="f-claim-notes" rows="3" placeholder="Co-pay, sub-limits..."></textarea></div>
+        </div>
+
+        <!-- History -->
+        <div class="card nc-card" id="nc-card-history">
+          <div class="card-head"><div class="card-title">History</div></div>
+          <div class="card-body">
+            <div class="nc-section-title">Treatment history</div>
+            <div class="nc-section-sub">Summarize what has already been tried for this patient.</div>
+            <div class="fgrid">
+              <div><label class="fg-lbl">Previous Treatments</label><textarea class="fi" id="f-prev-treatments" rows="3" placeholder="e.g. Physiotherapy, analgesics..."></textarea></div>
+              <div><label class="fg-lbl">Treatment Duration</label><input type="text" class="fi" id="f-treat-duration" placeholder="e.g. 6 weeks"/></div>
+              <div class="fg-full"><label class="fg-lbl">Outcome</label><textarea class="fi" id="f-treat-outcome" rows="3" placeholder="e.g. Partial relief..."></textarea></div>
+              <div><label class="fg-lbl">Primary Report Type</label><select class="fi" id="f-lab-type"><option value="">Select type...</option><option>MRI</option><option>X-Ray</option><option>CBC</option><option>LFT</option><option>Pain scale</option><option>Other</option></select></div>
+              <div><label class="fg-lbl">Report Date</label><input type="date" class="fi" id="f-lab-date"/></div>
+              <div class="fg-full"><label class="fg-lbl">Key Findings</label><textarea class="fi" id="f-lab-findings" rows="3" placeholder="e.g. MRI Lumbar Spine..."></textarea></div>
+            </div>
+            <div class="nc-nav">
+              <button class="btn btn-w" type="button" onclick="prevClaimStep()">Back: Documents</button>
+              <div class="nc-nav-right">
+                <button class="btn btn-g" type="button" onclick="nextClaimStep()">Next: Certification &amp; Risk</button>
+              </div>
+            </div>
           </div>
-          <div class="hr"></div>
-          <div class="sec-title">Optional Risk Factors</div>
-          <div class="fgrid">
-            <div><label class="fg-lbl">BMI</label><input type="number" step="0.1" class="fi" id="f-bmi" placeholder="e.g. 32"/></div>
-            <div><label class="fg-lbl">Age (years)</label><input type="number" class="fi" id="f-age" placeholder="e.g. 47"/></div>
-            <div><label class="fg-lbl">Conservative Treatment Duration</label><input type="text" class="fi" id="f-conservative-duration" placeholder="e.g. 6 weeks"/></div>
-            <div><label class="fg-lbl">MRI / Key Imaging Date</label><input type="date" class="fi" id="f-mri-date"/></div>
-            <div><label class="fg-lbl">Ultrasound / X-Ray Date</label><input type="date" class="fi" id="f-ultrasound-date"/></div>
-            <div><label class="fg-lbl">Latest Lab Report Date</label><input type="date" class="fi" id="f-lab-latest-date"/></div>
-            <div class="fg-full"><label class="fg-lbl">Risk Notes</label><textarea class="fi" id="f-risk-notes" rows="3" placeholder="e.g. BMI above threshold..."></textarea></div>
-          </div>
-          <div class="hr"></div>
-          <div style="display:flex;gap:12px;justify-content:flex-end">
-            <button class="btn btn-w" onclick="resetForm()">Reset Form</button>
-            <button class="btn btn-g" onclick="runAgent()">🚀 Run Agent Analysis</button>
+        </div>
+
+        <!-- Certification & Risk -->
+        <div class="card nc-card" id="nc-card-cert">
+          <div class="card-head"><div class="card-title">Certification &amp; Risk</div></div>
+          <div class="card-body">
+            <div class="nc-section-title">Final certification &amp; risk factors</div>
+            <div class="nc-section-sub">Capture clinician sign-off, claim details, and optional risk info.</div>
+            <div class="fgrid">
+              <div><label class="fg-lbl">Surgeon Name</label><input type="text" class="fi" id="f-cert-surgeon" placeholder="e.g. Dr. Sharma"/></div>
+              <div><label class="fg-lbl">Medical License ID</label><input type="text" class="fi" id="f-license" placeholder="e.g. TN-XXXX"/></div>
+              <div class="fg-full"><label class="fg-lbl">Certification Notes</label><textarea class="fi" id="f-cert-notes" rows="3" placeholder="Surgeon justification..."></textarea></div>
+              <div><label class="fg-lbl">Claim ID</label><input type="text" class="fi" id="f-claim-id" placeholder="e.g. CLM_011"/></div>
+              <div><label class="fg-lbl">Claim Submission Date</label><input type="date" class="fi" id="f-claim-date"/></div>
+              <div><label class="fg-lbl">Requested Amount (₹)</label><input type="number" class="fi" id="f-requested-amount" placeholder="e.g. 175000"/></div>
+              <div><label class="fg-lbl">Procedure Cost Estimate (₹)</label><input type="number" class="fi" id="f-proc-cost-est" placeholder="e.g. 175000"/></div>
+              <div class="fg-full"><label class="fg-lbl">Internal Claim Notes</label><textarea class="fi" id="f-claim-notes" rows="3" placeholder="Co-pay, sub-limits..."></textarea></div>
+              <div><label class="fg-lbl">BMI</label><input type="number" step="0.1" class="fi" id="f-bmi" placeholder="e.g. 32"/></div>
+              <div><label class="fg-lbl">Age (years)</label><input type="number" class="fi" id="f-age" placeholder="e.g. 47"/></div>
+              <div><label class="fg-lbl">Conservative Treatment Duration</label><input type="text" class="fi" id="f-conservative-duration" placeholder="e.g. 6 weeks"/></div>
+              <div><label class="fg-lbl">MRI / Key Imaging Date</label><input type="date" class="fi" id="f-mri-date"/></div>
+              <div><label class="fg-lbl">Ultrasound / X-Ray Date</label><input type="date" class="fi" id="f-ultrasound-date"/></div>
+              <div><label class="fg-lbl">Latest Lab Report Date</label><input type="date" class="fi" id="f-lab-latest-date"/></div>
+              <div class="fg-full"><label class="fg-lbl">Risk Notes</label><textarea class="fi" id="f-risk-notes" rows="3" placeholder="e.g. BMI above threshold..."></textarea></div>
+            </div>
+            <div class="nc-nav">
+              <button class="btn btn-w" type="button" onclick="prevClaimStep()">Back: History</button>
+              <div class="nc-nav-right">
+                <button class="btn btn-w" type="button" onclick="resetForm()">Reset Form</button>
+                <button class="btn btn-g" type="button" onclick="runAgent()">🚀 Run Agent Analysis</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2466,6 +2688,57 @@ function togglePwd(id, icon) {
 }
 
 // ============================================================
+//  NEW CLAIM WIZARD
+// ============================================================
+const CLAIM_STEPS = ['patient', 'diagnosis', 'procedure', 'documents', 'history', 'cert'];
+
+function initClaimStepper() {
+  setClaimStep('patient', false);
+}
+
+function setClaimStep(stepId, scrollIntoView = false) {
+  const idx = CLAIM_STEPS.indexOf(stepId);
+  if (idx === -1) return;
+
+  CLAIM_STEPS.forEach((id, i) => {
+    const card = document.getElementById('nc-card-' + id);
+    if (card) {
+      card.classList.toggle('active', id === stepId);
+    }
+    const stepEls = document.querySelectorAll('.nc-step[data-step="' + id + '"]');
+    stepEls.forEach(stepEl => {
+      stepEl.classList.toggle('active', id === stepId);
+      stepEl.classList.toggle('completed', i < idx);
+    });
+  });
+
+  if (scrollIntoView) {
+    const el = document.getElementById('page-new-claim');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function goToClaimStep(stepId) {
+  setClaimStep(stepId, false);
+}
+
+function nextClaimStep() {
+  const active = document.querySelector('.nc-step.active');
+  const currentId = active ? active.getAttribute('data-step') : CLAIM_STEPS[0];
+  const idx = CLAIM_STEPS.indexOf(currentId);
+  if (idx === -1 || idx >= CLAIM_STEPS.length - 1) return;
+  setClaimStep(CLAIM_STEPS[idx + 1], true);
+}
+
+function prevClaimStep() {
+  const active = document.querySelector('.nc-step.active');
+  const currentId = active ? active.getAttribute('data-step') : CLAIM_STEPS[0];
+  const idx = CLAIM_STEPS.indexOf(currentId);
+  if (idx <= 0) return;
+  setClaimStep(CLAIM_STEPS[idx - 1], true);
+}
+
+// ============================================================
 //  APP NAVIGATION
 // ============================================================
 function navigate(page) {
@@ -2475,6 +2748,9 @@ function navigate(page) {
   const pages = ['dashboard','new-claim','analysis','preauth','appeal','history'];
   const idx = pages.indexOf(page);
   if (idx >= 0) document.querySelectorAll('.nav-item')[idx].classList.add('active');
+  if (page === 'new-claim') {
+    initClaimStepper();
+  }
 }
 
 // ============================================================
