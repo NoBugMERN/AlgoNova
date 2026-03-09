@@ -1,0 +1,121 @@
+{
+  "INS_A": {
+    "insurer_name": "StarHealth Insurance",
+    "procedures": {
+      "CPT_63030": {
+        "procedure_name": "Lumbar Discectomy",
+        "qualifying_icd10_codes": ["M51.1", "M51.16", "M51.17"],
+        "required_documents": [
+          "MRI Lumbar Spine",
+          "Surgeon Recommendation Letter",
+          "Physiotherapy Records",
+          "Certificate of Medical Necessity"
+        ],
+        "preauth_timeline_days": 7,
+        "max_approved_amount_inr": 180000,
+        "notes": "Conservative treatment of minimum 6 weeks must be documented"
+      },
+      "CPT_27447": {
+        "procedure_name": "Total Knee Replacement",
+        "qualifying_icd10_codes": ["M17.11", "M17.31"],
+        "required_documents": [
+          "X-Ray Knee (Weight Bearing)",
+          "Surgeon Recommendation Letter",
+          "Physiotherapy Records",
+          "BMI Report"
+        ],
+        "preauth_timeline_days": 10,
+        "max_approved_amount_inr": 320000,
+        "notes": "Patient BMI must be under 40"
+      },
+      "CPT_47562": {
+        "procedure_name": "Laparoscopic Cholecystectomy",
+        "qualifying_icd10_codes": ["K80.20", "K81.0"],
+        "required_documents": ["Ultrasound Abdomen", "Surgeon Recommendation Letter", "LFT Report"],
+        "preauth_timeline_days": 5,
+        "max_approved_amount_inr": 95000,
+        "notes": "Acute cholecystitis must be confirmed via ultrasound"
+      }
+    }
+  },
+  "INS_B": {
+    "insurer_name": "HDFC ERGO Health",
+    "procedures": {
+      "CPT_63030": {
+        "procedure_name": "Lumbar Discectomy",
+        "qualifying_icd10_codes": ["M51.1", "M51.16"],
+        "required_documents": [
+          "MRI Lumbar Spine",
+          "Surgeon Recommendation Letter",
+          "Nerve Conduction Study",
+          "Physiotherapy Records"
+        ],
+        "preauth_timeline_days": 10,
+        "max_approved_amount_inr": 160000,
+        "notes": "NCS report mandatory for HDFC ERGO"
+      },
+      "CPT_27447": {
+        "procedure_name": "Total Knee Replacement",
+        "qualifying_icd10_codes": ["M17.11", "M17.12", "M17.31"],
+        "required_documents": [
+          "X-Ray Knee (Weight Bearing)",
+          "Surgeon Recommendation Letter",
+          "Physiotherapy Records"
+        ],
+        "preauth_timeline_days": 7,
+        "max_approved_amount_inr": 300000,
+        "notes": "Both knee X-rays required even if only one knee is operated"
+      },
+      "CPT_47562": {
+        "procedure_name": "Laparoscopic Cholecystectomy",
+        "qualifying_icd10_codes": ["K80.20", "K80.21", "K81.0"],
+        "required_documents": ["Ultrasound Abdomen", "Surgeon Recommendation Letter", "LFT Report", "CBC Report"],
+        "preauth_timeline_days": 4,
+        "max_approved_amount_inr": 90000,
+        "notes": "CBC required to rule out infection"
+      }
+    }
+  },
+  "INS_C": {
+    "insurer_name": "Bajaj Allianz Health",
+    "procedures": {
+      "CPT_63030": {
+        "procedure_name": "Lumbar Discectomy",
+        "qualifying_icd10_codes": ["M51.1"],
+        "required_documents": [
+          "MRI Lumbar Spine",
+          "Surgeon Recommendation Letter",
+          "Certificate of Medical Necessity",
+          "Physiotherapy Records",
+          "Pain Assessment Scale Record"
+        ],
+        "preauth_timeline_days": 14,
+        "max_approved_amount_inr": 150000,
+        "notes": "Strictest documentation requirements. Pain scale records mandatory."
+      },
+      "CPT_27447": {
+        "procedure_name": "Total Knee Replacement",
+        "qualifying_icd10_codes": ["M17.11"],
+        "required_documents": [
+          "X-Ray Knee (Weight Bearing)",
+          "Surgeon Recommendation Letter",
+          "Physiotherapy Records",
+          "BMI Report",
+          "Cardiology Fitness Certificate"
+        ],
+        "preauth_timeline_days": 14,
+        "max_approved_amount_inr": 280000,
+        "notes": "Cardiology clearance mandatory for all surgical cases"
+      },
+      "CPT_47562": {
+        "procedure_name": "Laparoscopic Cholecystectomy",
+        "qualifying_icd10_codes": ["K80.20", "K81.0"],
+        "required_documents": ["Ultrasound Abdomen", "Surgeon Recommendation Letter", "LFT Report"],
+        "preauth_timeline_days": 5,
+        "max_approved_amount_inr": 85000,
+        "notes": "Standard requirements"
+      }
+    }
+  }
+}
+

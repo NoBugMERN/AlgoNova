@@ -1,0 +1,2 @@
+claim_id,insurer_id,patient_id,cpt_code,icd10_code,features_json,label_rejected
+

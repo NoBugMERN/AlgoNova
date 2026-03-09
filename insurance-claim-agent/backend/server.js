@@ -94,9 +94,18 @@ app.post("/api/analyze", async (req, res) => {
       return res.status(400).json({ error: "patientId, insurerId, procedureId are required" });
     }
 
-    const ehr = await readDataJson("patients", `${patientId}.json`);
-    const insurer = await readDataJson("insurance", `${insurerId}.json`);
-    const procedurePolicy = (insurer.procedures || []).find((p) => p.procedureId === procedureId);
+    const ehr = await readDataJson("mock", "patient_ehr.json");
+    if (ehr?.patient_id && ehr.patient_id !== patientId) {
+      return res.status(404).json({ error: `patientId ${patientId} not found in mock dataset` });
+    }
+
+    const policies = await readDataJson("mock", "insurance_policies.json");
+    const insurer = policies?.[insurerId];
+    if (!insurer) {
+      return res.status(404).json({ error: `insurerId ${insurerId} not found in mock dataset` });
+    }
+
+    const procedurePolicy = insurer?.procedures?.[procedureId];
     if (!procedurePolicy) {
       return res.status(404).json({ error: `procedureId ${procedureId} not found for insurer ${insurerId}` });
     }
@@ -112,10 +121,10 @@ app.post("/api/analyze", async (req, res) => {
     try {
       ehrEvidence = await callAiEngine("/extract_ehr", {
         ehr,
-        requirements: procedurePolicy.requiredEvidence || []
+        requirements: procedurePolicy.required_documents || []
       });
     } catch (_e) {
-      ehrEvidence = localExtractEhr(ehr, procedurePolicy.requiredEvidence || []);
+      ehrEvidence = localExtractEhr(ehr, procedurePolicy.required_documents || []);
     }
 
     const gapAnalysis = analyzeGaps({
@@ -124,7 +133,7 @@ app.post("/api/analyze", async (req, res) => {
       ehrEvidence
     });
 
-    const historical = await readDataJson("rejection_history", "historical_rejections.json");
+    const historical = await readDataJson("mock", "historical_rejections.json");
     const risk = scoreRejectionRisk({
       procedurePolicy,
       parsedNote,

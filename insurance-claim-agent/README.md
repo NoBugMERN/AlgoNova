@@ -6,7 +6,7 @@ End-to-end starter scaffold for a pre-authorization / insurance-claim support ag
 - `ai-engine/`: Python engine (note parsing, EHR evidence extraction, ICD-10 lookup)
 - `logic/`: Gap analysis + rejection risk scoring (pure JS modules)
 - `frontend/`: Minimal UI stub (static HTML + placeholder React component files)
-- `data/`: Mock JSON/TXT inputs (patients, insurer rules, surgeon notes, rejection history)
+- `data/`: `raw/` (never edit), `processed/` (cleaned), `mock/` (frozen Phase 1 JSON)
 - `shared/`: Frozen request/response shapes (`api_contract.json`)
 - `bonus/`: Optional appeal automation scripts (stubs)
 
@@ -25,8 +25,8 @@ API runs on `http://localhost:3001`.
 
 Useful endpoints:
 
-- `GET /api/ehr/patient_001`
-- `GET /api/insurance/insurer_C`
+- `GET /api/ehr/PAT_001`
+- `GET /api/insurance/INS_A`
 - `POST /api/analyze` (runs AI + logic using mock inputs)
 
 ### 2) AI Engine (Python)

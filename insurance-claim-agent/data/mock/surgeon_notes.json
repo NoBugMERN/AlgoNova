@@ -1,0 +1,33 @@
+{
+  "note_001": {
+    "note_id": "NOTE_001",
+    "patient_id": "PAT_001",
+    "doctor_id": "DOC_101",
+    "doctor_name": "Dr. Anand Sharma",
+    "specialization": "Orthopedic Spine Surgeon",
+    "date": "2024-02-10",
+    "raw_text": "Patient Rajesh Kumar, 45-year-old male, presents with severe lower back pain radiating to the left leg for over 14 months. MRI confirms L4-L5 disc herniation with significant nerve root compression. Conservative treatments including 6 weeks of physiotherapy and two epidural steroid injections have failed to provide lasting relief. The patient reports a pain score of 8/10 on the Visual Analog Scale. I strongly recommend proceeding with Lumbar Discectomy (L4-L5) to decompress the nerve root and restore function. The procedure is medically necessary to prevent permanent neurological damage.",
+    "extracted": {
+      "procedure": "Lumbar Discectomy",
+      "cpt_code": "CPT_63030",
+      "icd10_code": "M51.1",
+      "urgency": "Elective but time-sensitive"
+    }
+  },
+  "note_002": {
+    "note_id": "NOTE_002",
+    "patient_id": "PAT_002",
+    "doctor_id": "DOC_102",
+    "doctor_name": "Dr. Priya Menon",
+    "specialization": "General & Laparoscopic Surgeon",
+    "date": "2024-02-12",
+    "raw_text": "Patient Sunita Rao, 52-year-old female, has been diagnosed with acute calculous cholecystitis confirmed by ultrasound abdomen showing multiple gallstones with gallbladder wall thickening. She has experienced three episodes of acute pain in the past two months. LFT shows mildly elevated bilirubin. Immediate surgical intervention is recommended. Laparoscopic Cholecystectomy is the procedure of choice to prevent further complications including perforation or sepsis.",
+    "extracted": {
+      "procedure": "Laparoscopic Cholecystectomy",
+      "cpt_code": "CPT_47562",
+      "icd10_code": "K81.0",
+      "urgency": "Urgent"
+    }
+  }
+}
+

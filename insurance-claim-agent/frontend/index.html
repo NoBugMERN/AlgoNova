@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insurance Claim Agent</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Insurance Claim Agent</h1>
+        <p class="subtle">Mock pre-auth analysis using frozen JSON + simple rules.</p>
+      </header>
+
+      <section class="card">
+        <h2>Run analysis</h2>
+        <form id="analyzeForm" class="form">
+          <label>
+            Patient ID
+            <input name="patientId" value="PAT_001" />
+          </label>
+          <label>
+            Insurer ID
+            <input name="insurerId" value="INS_A" />
+          </label>
+          <label>
+            Procedure ID (CPT)
+            <input name="procedureId" value="CPT_63030" />
+          </label>
+          <label>
+            Surgeon note text
+            <textarea name="surgeonNoteText" rows="6">Patient presents with severe lower back pain. MRI confirms L4-L5 disc herniation. Conservative treatment failed. Recommend Lumbar Discectomy.</textarea>
+          </label>
+
+          <div class="row">
+            <button type="submit">Analyze</button>
+            <button type="button" id="loadMock">Load mock note</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>Result</h2>
+          <pre id="result" class="pre">(run an analysis)</pre>
+        </div>
+        <div class="card">
+          <h2>Quick checks</h2>
+          <div class="row">
+            <button type="button" id="pingBackend">Ping backend</button>
+            <button type="button" id="pingAi">Ping ai-engine</button>
+          </div>
+          <pre id="checks" class="pre"></pre>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+
+      async function safeJson(resp) {
+        const text = await resp.text();
+        try {
+          return JSON.parse(text);
+        } catch {
+          return { raw: text };
+        }
+      }
+
+      $("analyzeForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const payload = Object.fromEntries(fd.entries());
+        $("result").textContent = "Loading...";
+        try {
+          const resp = await fetch("http://localhost:3001/api/analyze", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await safeJson(resp);
+          $("result").textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          $("result").textContent = String(err);
+        }
+      });
+
+      $("pingBackend").addEventListener("click", async () => {
+        $("checks").textContent = "Pinging backend...";
+        try {
+          const resp = await fetch("http://localhost:3001/health");
+          $("checks").textContent = JSON.stringify(await safeJson(resp), null, 2);
+        } catch (err) {
+          $("checks").textContent = String(err);
+        }
+      });
+
+      $("pingAi").addEventListener("click", async () => {
+        $("checks").textContent = "Pinging ai-engine...";
+        try {
+          const resp = await fetch("http://localhost:8001/health");
+          $("checks").textContent = JSON.stringify(await safeJson(resp), null, 2);
+        } catch (err) {
+          $("checks").textContent = String(err);
+        }
+      });
+
+      $("loadMock").addEventListener("click", async () => {
+        const note = `Patient Rajesh Kumar, 45-year-old male, presents with severe lower back pain radiating to the left leg for over 14 months.
+MRI confirms L4-L5 disc herniation with significant nerve root compression.
+Conservative treatments including 6 weeks of physiotherapy and two epidural steroid injections have failed to provide lasting relief.
+Pain score 8/10. Recommend proceeding with Lumbar Discectomy (L4-L5).`;
+        document.querySelector("textarea[name='surgeonNoteText']").value = note;
+      });
+    </script>
+  </body>
+</html>
+
