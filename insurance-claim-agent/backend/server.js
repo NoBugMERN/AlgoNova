@@ -14,7 +14,7 @@ const insuranceRoutes = require("./routes/insurance.routes");
 const insurerRoutes   = require("./routes/insurer.routes");
 
 const path = require("path");
-const InsuranceLogicManager = require("../logic");
+const InsuranceLogicManager = require("./logic");
 
 const app = express();
 app.use(cors());
