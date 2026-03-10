@@ -13,14 +13,6 @@ Built using the **MERN Stack**, the platform provides an interactive environment
 
 ## 🌐 Preview
 
-> Add your project preview here (HTML page, screenshots, or demo link).
-
-### Live Demo
-
-[View Live Demo](#)
-
-### Screenshots
-
 | Feature        | Preview                               |
 | -------------- | ------------------------------------- |
 | Homepage       | <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/e5e3a650-d271-4ffa-946f-c32e9fc21fdf" />
