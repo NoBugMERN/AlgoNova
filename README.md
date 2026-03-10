@@ -1,4 +1,4 @@
-# Clear Claim 
+# 📰Clear Claim 
 
 **AlgoNova's Clear Claim** is a full-stack platform designed to help developers learn, practice, and visualize algorithms efficiently.
 Built using the **MERN Stack**, the platform provides an interactive environment for experimenting with algorithm logic, tracking progress, and improving problem-solving skills.
