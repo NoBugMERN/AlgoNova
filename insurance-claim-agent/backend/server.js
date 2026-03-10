@@ -53,11 +53,10 @@ pythonProcess.stdout.on("data", (data) => {
 pythonProcess.stderr.on("data", (data) => {
   console.error(`AI Engine Error: ${data}`);
 });
-  const PORT = process.env.PORT || 3001;
-  app.listen(PORT, () => {
-    console.log(`🚀 Express API running on port ${PORT}`);
-    console.log(`Make sure FastAPI is running: python ai-engine/main.py`);
-});
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+console.log(`🚀 Express API running on port ${PORT}`);
+console.log(`Make sure FastAPI is running: python ai-engine/main.py`);});
 }).catch(err => {
   console.error("Failed to initialize LogicManager:", err);
   process.exit(1);
