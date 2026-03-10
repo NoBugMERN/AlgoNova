@@ -1,5 +1,25 @@
 [
   {
+    "id": "CLM_2403",
+    "patientId": "PAT_003",
+    "patientName": "Arun Mehta",
+    "procedure": "Percutaneous Coronary Intervention (PCI) with Stenting",
+    "cpt_code": "CPT_92928",
+    "insurerId": "INS_C",
+    "insurerName": "CareShield Insurance",
+    "cost": "₹2,80,000",
+    "submitted": "Mar 10",
+    "submittedAt": "2026-03-10T06:58:41.654Z",
+    "risk": "High",
+    "status": "Rejected",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Coronary Angiogram",
+      "Electrocardiogram (ECG)",
+      "Echocardiogram within 90 days"
+    ]
+  },
+  {
     "id": "CLM_2404",
     "patientId": "PAT_004",
     "patientName": "Deepa Nair",

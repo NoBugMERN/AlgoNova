@@ -1,5 +1,21 @@
 [
   {
+    "id": "ALT_1773125921607",
+    "doctorId": "Dr. Suresh Rajan",
+    "claimId": "CLM_2403",
+    "patientId": "PAT_003",
+    "patientName": "Arun Mehta",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Coronary Angiogram",
+      "Electrocardiogram (ECG)",
+      "Echocardiogram within 90 days"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2403: Surgeon Recommendation Letter, Coronary Angiogram, Electrocardiogram (ECG), Echocardiogram within 90 days",
+    "createdAt": "2026-03-10T06:58:41.607Z",
+    "read": false
+  },
+  {
     "id": "ALT_1773118635359",
     "doctorId": "Dr. Priya Menon",
     "claimId": "CLM_2404",
