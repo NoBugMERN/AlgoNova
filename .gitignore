@@ -1,0 +1,10 @@
+insurance-claim-agent/data/raw/
+insurance-claim-agent/data/processed/
+
+# Python cache
+__pycache__/
+*.pyc
+.venv/
+
+# Mac junk
+.DS_Store

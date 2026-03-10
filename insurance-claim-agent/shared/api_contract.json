@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "notes": "Frozen JSON shapes for the insurance-claim-agent scaffold.",
+  "backend": {
+    "baseUrl": "http://localhost:3001",
+    "endpoints": {
+      "GET /api/ehr/:patientId": {
+        "response": {
+          "patientId": "patient_001",
+          "demographics": { "name": "string", "dob": "YYYY-MM-DD", "sex": "string" },
+          "diagnoses": [{ "icd10": "string", "label": "string" }],
+          "medications": [{ "name": "string", "dose": "string", "frequency": "string" }],
+          "labs": [
+            {
+              "date": "YYYY-MM-DD",
+              "panel": "string",
+              "results": [{ "name": "string", "value": "string", "unit": "string", "flag": "N|H|L" }]
+            }
+          ],
+          "imaging": [{ "date": "YYYY-MM-DD", "type": "string", "summary": "string" }],
+          "procedures": [{ "cpt": "string", "label": "string", "date": "YYYY-MM-DD" }],
+          "allergies": ["string"]
+        }
+      },
+      "GET /api/insurance/:insurerId": {
+        "response": {
+          "insurerId": "insurer_C",
+          "name": "string",
+          "procedures": [
+            {
+              "procedureId": "procedure_1",
+              "label": "string",
+              "requiredDocuments": ["string"],
+              "requiredEvidence": ["string"],
+              "coverageRules": ["string"],
+              "commonDenialReasons": ["string"]
+            }
+          ]
+        }
+      },
+      "POST /api/analyze": {
+        "request": {
+          "patientId": "patient_001",
+          "insurerId": "insurer_C",
+          "procedureId": "procedure_1",
+          "surgeonNoteText": "string"
+        },
+        "response": {
+          "request": { "patientId": "string", "insurerId": "string", "procedureId": "string" },
+          "parsedNote": {
+            "procedureMentioned": "string",
+            "indication": "string",
+            "suggestedIcd10": ["string"],
+            "missingFields": ["string"]
+          },
+          "ehrEvidence": {
+            "matchedEvidence": [{ "requirement": "string", "evidence": "string", "source": "string" }],
+            "missingEvidence": ["string"]
+          },
+          "gapAnalysis": {
+            "missingDocuments": ["string"],
+            "missingEvidence": ["string"],
+            "policyRedFlags": ["string"]
+          },
+          "risk": {
+            "score": 0,
+            "level": "Low|Medium|High",
+            "topDrivers": ["string"]
+          }
+        }
+      }
+    }
+  },
+  "aiEngine": {
+    "baseUrl": "http://localhost:8001",
+    "endpoints": {
+      "POST /parse_note": {
+        "request": { "text": "string" },
+        "response": {
+          "procedureMentioned": "string",
+          "indication": "string",
+          "suggestedIcd10": ["string"],
+          "missingFields": ["string"]
+        }
+      },
+      "POST /extract_ehr": {
+        "request": {
+          "ehr": {},
+          "requirements": ["string"]
+        },
+        "response": {
+          "matchedEvidence": [{ "requirement": "string", "evidence": "string", "source": "string" }],
+          "missingEvidence": ["string"]
+        }
+      },
+      "GET /icd10/:query": {
+        "response": { "query": "string", "results": [{ "icd10": "string", "label": "string" }] }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,94 @@
+{
+  "agent": "InsuranceClaimOptimizationAgent v1.0",
+  "patient_id": "PAT_002",
+  "patient_name": "Priya Sharma",
+  "insurer_id": "INS_A",
+  "cpt_code": "CPT_27447",
+  "icd10_code": "M17.11",
+  "risk_level": "MEDIUM",
+  "risk_score": 50,
+  "risk_factors": [
+    {
+      "factor": "2 documents missing",
+      "impact": -40,
+      "positive": false
+    },
+    {
+      "factor": "Diagnosis confirmed in EHR",
+      "impact": 0,
+      "positive": true
+    },
+    {
+      "factor": "Conservative treatment documented",
+      "impact": 0,
+      "positive": true
+    },
+    {
+      "factor": "2 relevant lab reports available",
+      "impact": 0,
+      "positive": true
+    },
+    {
+      "factor": "ML model flags similar claims as high risk (47% probability)",
+      "impact": -10,
+      "positive": false
+    }
+  ],
+  "preauth_form": {
+    "form_type": "Pre-Authorization Request",
+    "submission_date": "2023-07-22",
+    "patient": {
+      "id": "PAT_002",
+      "name": "Priya Sharma",
+      "age": 64,
+      "gender": "Female"
+    },
+    "insurer_id": "INS_A",
+    "procedure": {
+      "cpt_code": "CPT_27447",
+      "description": "Total Knee Arthroplasty"
+    },
+    "diagnosis": {
+      "icd10_code": "M17.11",
+      "description": "No ICD-10 code found for: M17.11",
+      "confirmed_in_ehr": true
+    },
+    "supporting_evidence": {
+      "relevant_lab_reports": [
+        "X-Ray Right Knee (2023-06-01): Severe joint space narrowing, osteophyte formation Grade 4",
+        "MRI Right Knee (2023-06-20): Complete cartilage loss medial compartment"
+      ],
+      "conservative_treatments": [
+        "Physical Therapy \u2014 8 weeks \u2014 Outcome: No significant improvement",
+        "Corticosteroid Injection \u2014  \u2014 Outcome: Relief lasted 6 weeks, pain returned",
+        "Hyaluronic Acid Injection \u2014  \u2014 Outcome: Minimal improvement"
+      ],
+      "current_medications": [
+        "Celecoxib 200mg",
+        "Calcium + Vit D"
+      ],
+      "diagnosis_history_summary": [
+        "2023-05-20: M17.11 \u2014 Primary osteoarthritis, right knee",
+        "2022-12-10: M25.561 \u2014 Pain in right knee"
+      ]
+    },
+    "submitted_documents": [
+      "X-Ray or MRI showing Grade 3/4 osteoarthritis",
+      "Proof of failed conservative treatment (min 3 months)"
+    ],
+    "missing_documents": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "max_approved_amount": 25000,
+    "preauth_timeline_days": 10,
+    "policy_notes": "Conservative treatment must be documented for at least 3 months prior.",
+    "status": "INCOMPLETE \u2014 MISSING DOCUMENTS"
+  },
+  "ready_to_submit": false,
+  "missing_docs": [
+    "Surgeon Recommendation Letter",
+    "Certificate of Medical Necessity"
+  ],
+  "doctor_notified": "DR_202"
+}

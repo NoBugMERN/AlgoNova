@@ -1,0 +1,98 @@
+{
+  "agent": "InsuranceClaimOptimizationAgent v1.0",
+  "patient_id": "PAT_001",
+  "patient_name": "Rajesh Kumar",
+  "insurer_id": "INS_C",
+  "cpt_code": "CPT_63030",
+  "icd10_code": "M51.1",
+  "risk_level": "MEDIUM",
+  "risk_score": 50,
+  "risk_factors": [
+    {
+      "factor": "2 documents missing",
+      "impact": -40,
+      "positive": false
+    },
+    {
+      "factor": "Diagnosis confirmed in EHR",
+      "impact": 0,
+      "positive": true
+    },
+    {
+      "factor": "Conservative treatment documented",
+      "impact": 0,
+      "positive": true
+    },
+    {
+      "factor": "3 relevant lab reports available",
+      "impact": 0,
+      "positive": true
+    },
+    {
+      "factor": "ML model flags similar claims as high risk (52% probability)",
+      "impact": -10,
+      "positive": false
+    }
+  ],
+  "preauth_form": {
+    "form_type": "Pre-Authorization Request",
+    "submission_date": "2023-07-22",
+    "patient": {
+      "id": "PAT_001",
+      "name": "Rajesh Kumar",
+      "age": 58,
+      "gender": "Male"
+    },
+    "insurer_id": "INS_C",
+    "procedure": {
+      "cpt_code": "CPT_63030",
+      "description": "Lumbar Discectomy"
+    },
+    "diagnosis": {
+      "icd10_code": "M51.1",
+      "description": "No ICD-10 code found for: M51.1",
+      "confirmed_in_ehr": true
+    },
+    "supporting_evidence": {
+      "relevant_lab_reports": [
+        "MRI Lumbar Spine (2023-07-01): Large L4-L5 disc herniation with nerve root compression",
+        "X-Ray Lumbar Spine (2023-05-15): Degenerative disc disease L4-L5, L5-S1",
+        "Nerve Conduction Study (2023-07-05): Abnormal \u2014 L4 radiculopathy confirmed"
+      ],
+      "conservative_treatments": [
+        "Physical Therapy \u2014 6 weeks \u2014 Outcome: Partial relief, recurrence",
+        "Epidural Steroid Injection \u2014  \u2014 Outcome: Temporary relief, symptoms returned",
+        "Chiropractic Care \u2014 4 weeks \u2014 Outcome: Minimal improvement"
+      ],
+      "current_medications": [
+        "Ibuprofen 400mg",
+        "Gabapentin 300mg",
+        "Cyclobenzaprine"
+      ],
+      "diagnosis_history_summary": [
+        "2023-06-10: M51.1 \u2014 Lumbar disc herniation with radiculopathy",
+        "2023-01-15: M54.5 \u2014 Low back pain",
+        "2022-09-20: M54.4 \u2014 Lumbago with sciatica"
+      ]
+    },
+    "submitted_documents": [
+      "MRI report confirming disc herniation",
+      "Nerve Conduction Study or EMG",
+      "Proof of failed conservative treatment (min 6 weeks)"
+    ],
+    "missing_documents": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "max_approved_amount": 18000,
+    "preauth_timeline_days": 14,
+    "policy_notes": "MRI must be within 6 months of surgery date. Conservative treatment must include PT.",
+    "status": "INCOMPLETE \u2014 MISSING DOCUMENTS"
+  },
+  "ready_to_submit": false,
+  "missing_docs": [
+    "Surgeon Recommendation Letter",
+    "Certificate of Medical Necessity"
+  ],
+  "doctor_notified": "DR_101"
+}

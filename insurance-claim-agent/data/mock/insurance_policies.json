@@ -1,0 +1,152 @@
+{
+  "INS_A": {
+    "name": "InsureCo Alpha",
+    "procedures": {
+      "CPT_63030": {
+        "procedure": "Lumbar Discectomy",
+        "required_documents": [
+          "Surgeon Recommendation Letter",
+          "MRI Lumbar Spine",
+          "Nerve Conduction Study or EMG",
+          "Physiotherapy Records",
+          "Certificate of Medical Necessity"
+        ],
+        "qualifying_icd10": [
+          "M51.1",
+          "M51.16",
+          "M51.17"
+        ],
+        "preauth_timeline_days": 14,
+        "max_approved_amount": 180000,
+        "notes": "MRI must be within 6 months. PT records required for min 6 weeks."
+      },
+      "CPT_27447": {
+        "procedure": "Total Knee Arthroplasty",
+        "required_documents": [
+          "Surgeon Recommendation Letter",
+          "X-Ray Right Knee",
+          "Physiotherapy Records",
+          "Certificate of Medical Necessity"
+        ],
+        "qualifying_icd10": [
+          "M17.11",
+          "M17.12",
+          "M17.31"
+        ],
+        "preauth_timeline_days": 10,
+        "max_approved_amount": 250000,
+        "notes": "Conservative treatment must be documented for at least 3 months."
+      },
+      "CPT_47562": {
+        "procedure": "Laparoscopic Cholecystectomy",
+        "required_documents": [
+          "Ultrasound Abdomen Report",
+          "CBC & LFT Blood Panel",
+          "Surgeon's Operative Note"
+        ],
+        "qualifying_icd10": [
+          "K80.20",
+          "K81.0",
+          "K80.10"
+        ],
+        "preauth_timeline_days": 5,
+        "max_approved_amount": 210000,
+        "notes": "Ultrasound required to confirm gallstones. LFT panel required if obstruction suspected."
+      }
+    }
+  },
+  "INS_B": {
+    "name": "BlueStar Health",
+    "procedures": {
+      "CPT_27447": {
+        "procedure": "Total Knee Arthroplasty",
+        "required_documents": [
+          "Surgeon Recommendation Letter",
+          "X-Ray Right Knee",
+          "MRI Right Knee",
+          "Physiotherapy Records",
+          "Certificate of Medical Necessity"
+        ],
+        "qualifying_icd10": [
+          "M17.11",
+          "M17.12"
+        ],
+        "preauth_timeline_days": 7,
+        "max_approved_amount": 220000,
+        "notes": "Both X-Ray and MRI required. PT records for min 8 weeks."
+      },
+      "CPT_63030": {
+        "procedure": "Lumbar Discectomy",
+        "required_documents": [
+          "Surgeon Recommendation Letter",
+          "MRI Lumbar Spine",
+          "Nerve Conduction Study or EMG",
+          "Physiotherapy Records",
+          "Certificate of Medical Necessity"
+        ],
+        "qualifying_icd10": [
+          "M51.1",
+          "M51.16"
+        ],
+        "preauth_timeline_days": 10,
+        "max_approved_amount": 160000,
+        "notes": "MRI must be within 6 months of planned surgery date."
+      },
+      "CPT_44950": {
+        "procedure": "Laparoscopic Appendectomy",
+        "required_documents": [
+          "Surgeon's Certificate of Medical Necessity",
+          "CBC & Blood Report",
+          "Ultrasound Abdomen",
+          "Hospital Admission Form"
+        ],
+        "qualifying_icd10": [
+          "K37",
+          "K35.80"
+        ],
+        "preauth_timeline_days": 2,
+        "max_approved_amount": 180000,
+        "notes": "Emergency surgery requires post-op submission within 48 hours if preauth is skipped."
+      }
+    }
+  },
+  "INS_C": {
+    "name": "CareShield Insurance",
+    "procedures": {
+      "CPT_63030": {
+        "procedure": "Lumbar Discectomy",
+        "required_documents": [
+          "Surgeon Recommendation Letter",
+          "MRI Lumbar Spine",
+          "Nerve Conduction Study or EMG",
+          "Physiotherapy Records",
+          "Certificate of Medical Necessity"
+        ],
+        "qualifying_icd10": [
+          "M51.1",
+          "M51.16",
+          "M51.17"
+        ],
+        "preauth_timeline_days": 14,
+        "max_approved_amount": 180000,
+        "notes": "MRI must be within 6 months. Conservative treatment must include PT."
+      },
+      "CPT_92928": {
+        "procedure": "Percutaneous Coronary Intervention",
+        "required_documents": [
+          "Surgeon Recommendation Letter",
+          "Coronary Angiogram",
+          "Electrocardiogram (ECG)",
+          "Echocardiogram within 90 days"
+        ],
+        "qualifying_icd10": [
+          "I25.10",
+          "I21.9"
+        ],
+        "preauth_timeline_days": 7,
+        "max_approved_amount": 280000,
+        "notes": "Echocardiogram is strictly required within 90 days of procedure. PTCA must include stent details."
+      }
+    }
+  }
+}

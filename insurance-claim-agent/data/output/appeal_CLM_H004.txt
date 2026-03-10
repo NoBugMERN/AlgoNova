@@ -1,0 +1,36 @@
+
+═══════════════════════════════════════════════════════════════
+INSURANCE CLAIM APPEAL LETTER
+═══════════════════════════════════════════════════════════════
+
+Date: 2023-08-01
+Claim ID: CLM_H004
+Procedure CPT: CPT_43239
+Insurer: INS_B
+
+To Whom It May Concern,
+
+We are writing to formally appeal the denial of claim CLM_H004
+for procedure CPT_43239 submitted to INS_B.
+
+REASON FOR DENIAL (as communicated):
+  Missing Certificate of Medical Necessity
+
+CORRECTIVE ACTION TAKEN:
+  Complete and attach a signed Certificate of Medical Necessity (CMN) from the treating surgeon.
+
+We respectfully request that this claim be reviewed again in
+light of the additional documentation now provided. This
+procedure is medically necessary as documented in the attached
+supporting evidence, including physician notes, lab reports,
+and proof of failed conservative treatment.
+
+We request a response within the standard appeal review period.
+Please contact our billing team with any questions.
+
+Sincerely,
+Revenue Cycle Team
+[Hospital / Clinic Name]
+
+[READY FOR BILLING TEAM REVIEW AND SIGNATURE]
+═══════════════════════════════════════════════════════════════

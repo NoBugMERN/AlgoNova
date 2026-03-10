@@ -1,0 +1,128 @@
+[
+  {
+    "id": "APL_1773116479086",
+    "claimId": "CLM_2403",
+    "patientId": "PAT_003",
+    "rejectionReason": "High rejection risk: Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_2403 (Patient PAT_003)\n\nWe are writing to appeal the denial based on: High rejection risk: Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T04:21:19.087Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773116214940",
+    "claimId": "CLM_2402",
+    "patientId": "PAT_002",
+    "rejectionReason": "High rejection risk: Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_2402 (Patient PAT_002)\n\nWe are writing to appeal the denial based on: High rejection risk: Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T04:16:54.940Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773115417684",
+    "claimId": "CLM_2403",
+    "patientId": "PAT_003",
+    "rejectionReason": "High rejection risk: Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_2403 (Patient PAT_003)\n\nWe are writing to appeal the denial based on: High rejection risk: Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T04:03:37.684Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773115372185",
+    "claimId": "CLM_2402",
+    "patientId": "PAT_002",
+    "rejectionReason": "High rejection risk: Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_2402 (Patient PAT_002)\n\nWe are writing to appeal the denial based on: High rejection risk: Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T04:02:52.185Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773112187561",
+    "claimId": "CLM_011",
+    "patientId": "PAT_005",
+    "rejectionReason": "High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_011 (Patient PAT_005)\n\nWe are writing to appeal the denial based on: High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T03:09:47.561Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773111477732",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "rejectionReason": "High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_011 (Patient PAT_001)\n\nWe are writing to appeal the denial based on: High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T02:57:57.732Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773111189021",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "rejectionReason": "High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_011 (Patient PAT_001)\n\nWe are writing to appeal the denial based on: High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T02:53:09.021Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773110951108",
+    "claimId": "CLM_011",
+    "patientId": "PAT_007",
+    "rejectionReason": "High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_011 (Patient PAT_007)\n\nWe are writing to appeal the denial based on: High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T02:49:11.108Z",
+    "status": "draft"
+  },
+  {
+    "id": "APL_1773110884137",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "rejectionReason": "High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.",
+    "rejectionCategory": "OTHER",
+    "recommendedActions": [
+      "Review rejection details",
+      "Collect supporting evidence"
+    ],
+    "appealLetter": "To Whom It May Concern,\n\nRe: Appeal for Claim CLM_011 (Patient PAT_001)\n\nWe are writing to appeal the denial based on: High rejection risk: High historical rejection rate for this insurer and procedure combination.; Missing or unvalidated ICD-10 diagnosis code.\n\nWe have attached the requested documentation and confirm medical necessity per the enclosed evidence. We request reconsideration and approval of this pre-authorization.\n\nSincerely,\nBilling Team",
+    "createdAt": "2026-03-10T02:48:04.137Z",
+    "status": "draft"
+  }
+]

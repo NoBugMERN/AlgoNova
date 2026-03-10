@@ -1,0 +1,255 @@
+{
+  "PAT_001": {
+    "patient_id": "PAT_001",
+    "name": "Rajesh Kumar",
+    "age": 58,
+    "gender": "Male",
+    "insurer_id": "INS_A",
+    "doctor_id": "DR_101",
+    "diagnosis_history": [
+      {
+        "date": "2023-07-01",
+        "icd10": "M51.1",
+        "description": "Lumbar disc herniation with radiculopathy"
+      },
+      {
+        "date": "2023-01-15",
+        "icd10": "M54.5",
+        "description": "Low back pain"
+      },
+      {
+        "date": "2022-09-20",
+        "icd10": "M54.4",
+        "description": "Lumbago with sciatica"
+      }
+    ],
+    "lab_reports": [
+      {
+        "id": "LAB_001",
+        "type": "MRI Lumbar Spine",
+        "date": "2023-07-01",
+        "result": "Large L4-L5 disc herniation with nerve root compression",
+        "relevant": true
+      },
+      {
+        "id": "LAB_002",
+        "type": "X-Ray Lumbar Spine",
+        "date": "2023-05-15",
+        "result": "Degenerative disc disease L4-L5, L5-S1",
+        "relevant": true
+      },
+      {
+        "id": "LAB_003",
+        "type": "Complete Blood Count",
+        "date": "2023-07-10",
+        "result": "WBC 7.2, RBC 4.8, Hemoglobin 14.2 — Normal",
+        "relevant": false
+      },
+      {
+        "id": "LAB_004",
+        "type": "Lipid Panel",
+        "date": "2023-06-20",
+        "result": "Total cholesterol 195 mg/dL — Normal",
+        "relevant": false
+      },
+      {
+        "id": "LAB_005",
+        "type": "Nerve Conduction Study",
+        "date": "2023-07-05",
+        "result": "Abnormal — L4 radiculopathy confirmed",
+        "relevant": true
+      }
+    ],
+    "medications": [
+      {
+        "name": "Ibuprofen 400mg",
+        "start_date": "2023-01-15",
+        "purpose": "Pain management"
+      },
+      {
+        "name": "Gabapentin 300mg",
+        "start_date": "2023-06-10",
+        "purpose": "Neuropathic pain"
+      },
+      {
+        "name": "Cyclobenzaprine",
+        "start_date": "2023-06-10",
+        "purpose": "Muscle relaxant"
+      }
+    ],
+    "prior_treatments": [
+      {
+        "type": "Physical Therapy",
+        "duration": "6 weeks",
+        "date": "2023-02-01",
+        "outcome": "Partial relief, recurrence"
+      },
+      {
+        "type": "Epidural Steroid Injection",
+        "duration": null,
+        "date": "2023-04-15",
+        "outcome": "Temporary relief, symptoms returned"
+      },
+      {
+        "type": "Chiropractic Care",
+        "duration": "4 weeks",
+        "date": "2022-11-01",
+        "outcome": "Minimal improvement"
+      }
+    ]
+  },
+  "PAT_002": {
+    "patient_id": "PAT_002",
+    "name": "Priya Sharma",
+    "age": 64,
+    "gender": "Female",
+    "insurer_id": "INS_B",
+    "doctor_id": "DR_202",
+    "diagnosis_history": [
+      {
+        "date": "2023-05-20",
+        "icd10": "M17.11",
+        "description": "Primary osteoarthritis, right knee"
+      },
+      {
+        "date": "2022-12-10",
+        "icd10": "M25.561",
+        "description": "Pain in right knee"
+      }
+    ],
+    "lab_reports": [
+      {
+        "id": "LAB_006",
+        "type": "X-Ray Right Knee",
+        "date": "2023-06-01",
+        "result": "Severe joint space narrowing, osteophyte formation Grade 4",
+        "relevant": true
+      },
+      {
+        "id": "LAB_007",
+        "type": "MRI Right Knee",
+        "date": "2023-06-20",
+        "result": "Complete cartilage loss medial compartment",
+        "relevant": true
+      },
+      {
+        "id": "LAB_008",
+        "type": "HbA1c",
+        "date": "2023-06-15",
+        "result": "5.9% — Pre-diabetic range",
+        "relevant": false
+      },
+      {
+        "id": "LAB_009",
+        "type": "ESR",
+        "date": "2023-06-15",
+        "result": "28 mm/hr — Mildly elevated",
+        "relevant": false
+      },
+      {
+        "id": "LAB_010",
+        "type": "Bone Density Scan",
+        "date": "2023-05-30",
+        "result": "T-score -1.8 — Osteopenia",
+        "relevant": false
+      }
+    ],
+    "medications": [
+      {
+        "name": "Celecoxib 200mg",
+        "start_date": "2022-12-10",
+        "purpose": "Arthritis pain"
+      },
+      {
+        "name": "Calcium + Vit D",
+        "start_date": "2023-01-01",
+        "purpose": "Bone health"
+      }
+    ],
+    "prior_treatments": [
+      {
+        "type": "Physical Therapy",
+        "duration": "8 weeks",
+        "date": "2023-01-10",
+        "outcome": "No significant improvement"
+      },
+      {
+        "type": "Corticosteroid Injection",
+        "duration": null,
+        "date": "2023-03-20",
+        "outcome": "Relief lasted 6 weeks, pain returned"
+      },
+      {
+        "type": "Hyaluronic Acid Injection",
+        "duration": null,
+        "date": "2023-05-01",
+        "outcome": "Minimal improvement"
+      }
+    ]
+  },
+  "PAT_004": {
+    "patient_id": "PAT_004",
+    "name": "Deepa Nair",
+    "age": 42,
+    "gender": "Female",
+    "insurer_id": "INS_A",
+    "doctor_id": "DR_303",
+    "diagnosis_history": [
+      {
+        "date": "2026-03-01",
+        "icd10": "K80.20",
+        "description": "Calculous cholecystitis with acute cholecystitis"
+      },
+      {
+        "date": "2025-11-10",
+        "icd10": "K80.10",
+        "description": "Calculus of gallbladder with chronic cholecystitis"
+      }
+    ],
+    "lab_reports": [
+      {
+        "id": "LAB_011",
+        "type": "Ultrasound Abdomen",
+        "date": "2026-03-02",
+        "result": "Multiple gallstones (largest 12mm) with thickened gallbladder wall. Consistent with calculous cholecystitis.",
+        "relevant": true
+      },
+      {
+        "id": "LAB_012",
+        "type": "CBC & LFT Blood Panel",
+        "date": "2026-03-02",
+        "result": "WBC 11.1 (mildly elevated). Bilirubin 1.4 mg/dL. ALT 47 U/L (mildly elevated). AST 39 U/L. ALP 98 U/L — consistent with biliary inflammation.",
+        "relevant": true
+      },
+      {
+        "id": "LAB_013",
+        "type": "Serum Amylase & Lipase",
+        "date": "2026-03-03",
+        "result": "Amylase 60 U/L. Lipase 52 U/L — Normal, pancreatitis excluded.",
+        "relevant": false
+      }
+    ],
+    "medications": [
+      {
+        "name": "Ursodeoxycholic Acid",
+        "start_date": "2025-11-10",
+        "purpose": "Gallstone dissolution attempt",
+        "dosage": "300mg BD"
+      },
+      {
+        "name": "Pantoprazole 40mg",
+        "start_date": "2025-11-10",
+        "purpose": "Acid suppression / GI symptom relief",
+        "dosage": "40mg OD"
+      }
+    ],
+    "prior_treatments": [
+      {
+        "type": "Ursodeoxycholic Acid therapy",
+        "duration": "4 months",
+        "date": "2025-11-10",
+        "outcome": "No significant stone dissolution. Symptoms persist. Surgery indicated."
+      }
+    ]
+  }
+}

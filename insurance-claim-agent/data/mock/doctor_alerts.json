@@ -1,0 +1,188 @@
+[
+  {
+    "id": "ALT_1773118635359",
+    "doctorId": "Dr. Priya Menon",
+    "claimId": "CLM_2404",
+    "patientId": "PAT_004",
+    "patientName": "Deepa Nair",
+    "missingDocs": [
+      "Surgeon's Operative Note"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2404: Surgeon's Operative Note",
+    "createdAt": "2026-03-10T04:57:15.359Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773118612297",
+    "doctorId": "Dr. Anand Krishnan",
+    "claimId": "CLM_2402",
+    "patientId": "PAT_002",
+    "patientName": "Priya Subramaniam",
+    "missingDocs": [
+      "Surgeon's Certificate of Medical Necessity",
+      "CBC & Blood Report",
+      "Ultrasound Abdomen"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2402: Surgeon's Certificate of Medical Necessity, CBC & Blood Report, Ultrasound Abdomen",
+    "createdAt": "2026-03-10T04:56:52.297Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773118478278",
+    "doctorId": "Dr. Suresh Rajan",
+    "claimId": "CLM_2403",
+    "patientId": "PAT_003",
+    "patientName": "Arun Mehta",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Coronary Angiogram",
+      "Electrocardiogram (ECG)",
+      "Echocardiogram within 90 days"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2403: Surgeon Recommendation Letter, Coronary Angiogram, Electrocardiogram (ECG), Echocardiogram within 90 days",
+    "createdAt": "2026-03-10T04:54:38.278Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773118446893",
+    "doctorId": "Dr. Sharma",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "patientName": "Rajesh Kumar",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_011: Surgeon Recommendation Letter, Certificate of Medical Necessity",
+    "createdAt": "2026-03-10T04:54:06.893Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773117494855",
+    "doctorId": "Dr. Anand Krishnan",
+    "claimId": "CLM_2402",
+    "patientId": "PAT_002",
+    "patientName": "Priya Subramaniam",
+    "missingDocs": [
+      "Surgeon's Certificate of Medical Necessity",
+      "CBC & Blood Report",
+      "Ultrasound Abdomen"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2402: Surgeon's Certificate of Medical Necessity, CBC & Blood Report, Ultrasound Abdomen",
+    "createdAt": "2026-03-10T04:38:14.855Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773117452824",
+    "doctorId": "Dr. Priya Menon",
+    "claimId": "CLM_2404",
+    "patientId": "PAT_004",
+    "patientName": "Deepa Nair",
+    "missingDocs": [
+      "Surgeon's Operative Note"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2404: Surgeon's Operative Note",
+    "createdAt": "2026-03-10T04:37:32.824Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773117432906",
+    "doctorId": "Dr. Sharma",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "patientName": "Rajesh Kumar",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_011: Surgeon Recommendation Letter, Certificate of Medical Necessity",
+    "createdAt": "2026-03-10T04:37:12.906Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773117404510",
+    "doctorId": "Dr. Anand Krishnan",
+    "claimId": "CLM_2402",
+    "patientId": "PAT_002",
+    "patientName": "Priya Subramaniam",
+    "missingDocs": [
+      "Surgeon's Certificate of Medical Necessity",
+      "CBC & Blood Report",
+      "Ultrasound Abdomen"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2402: Surgeon's Certificate of Medical Necessity, CBC & Blood Report, Ultrasound Abdomen",
+    "createdAt": "2026-03-10T04:36:44.510Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773117344647",
+    "doctorId": "Dr. Priya Menon",
+    "claimId": "CLM_2404",
+    "patientId": "PAT_004",
+    "patientName": "Deepa Nair",
+    "missingDocs": [
+      "Surgeon's Operative Note"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2404: Surgeon's Operative Note",
+    "createdAt": "2026-03-10T04:35:44.647Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773117321146",
+    "doctorId": "Dr. Sharma",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "patientName": "Rajesh Kumar",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_011: Surgeon Recommendation Letter, Certificate of Medical Necessity",
+    "createdAt": "2026-03-10T04:35:21.146Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773116865781",
+    "doctorId": "Dr. Sharma",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "patientName": "Rajesh Kumar",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_011: Surgeon Recommendation Letter, Certificate of Medical Necessity",
+    "createdAt": "2026-03-10T04:27:45.781Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773116848736",
+    "doctorId": "Dr. Suresh Rajan",
+    "claimId": "CLM_2403",
+    "patientId": "PAT_003",
+    "patientName": "Arun Mehta",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Coronary Angiogram",
+      "Electrocardiogram (ECG)",
+      "Echocardiogram within 90 days"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_2403: Surgeon Recommendation Letter, Coronary Angiogram, Electrocardiogram (ECG), Echocardiogram within 90 days",
+    "createdAt": "2026-03-10T04:27:28.736Z",
+    "read": false
+  },
+  {
+    "id": "ALT_1773116821329",
+    "doctorId": "Dr. Sharma",
+    "claimId": "CLM_011",
+    "patientId": "PAT_001",
+    "patientName": "Rajesh Kumar",
+    "missingDocs": [
+      "Surgeon Recommendation Letter",
+      "Certificate of Medical Necessity"
+    ],
+    "message": "Action required: Please provide the following for claim CLM_011: Surgeon Recommendation Letter, Certificate of Medical Necessity",
+    "createdAt": "2026-03-10T04:27:01.329Z",
+    "read": false
+  }
+]
