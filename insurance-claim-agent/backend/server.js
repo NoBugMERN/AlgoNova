@@ -45,6 +45,14 @@ logicManager.init().then(() => {
   app.use("/api/insurer",    insurerRoutes);
 
   // 3. Start the server
+const { spawn } = require("child_process");
+const pythonProcess = spawn("python", ["ai-engine/main.py"]);
+pythonProcess.stdout.on("data", (data) => {
+  console.log(`AI Engine: ${data}`);
+});
+pythonProcess.stderr.on("data", (data) => {
+  console.error(`AI Engine Error: ${data}`);
+});
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`🚀 Express API running on port ${PORT}`);
