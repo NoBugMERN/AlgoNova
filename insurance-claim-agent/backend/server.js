@@ -45,11 +45,11 @@ logicManager.init().then(() => {
   app.use("/api/insurer",    insurerRoutes);
 
   // 3. Start the server
-  const PORT = 3001;
+  const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
-    console.log(`🚀 Express API running on http://localhost:${PORT}`);
-    console.log(`   Make sure FastAPI is running: python ai-engine/main.py`);
-  });
+    console.log(`🚀 Express API running on port ${PORT}`);
+    console.log(`Make sure FastAPI is running: python ai-engine/main.py`);
+});
 }).catch(err => {
   console.error("Failed to initialize LogicManager:", err);
   process.exit(1);
