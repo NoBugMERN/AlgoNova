@@ -1,6 +1,3 @@
-insurance-claim-agent/data/raw/
-insurance-claim-agent/data/processed/
-
 node_modules/
 npm-debug.log
 .env
